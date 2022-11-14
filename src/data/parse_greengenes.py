@@ -130,7 +130,7 @@ def main(dataset_splits, alphabet, input_path, out_path):
     save_as_pickle((sequences, distances), filename='{}sequences_distances_{}.pickle'.format(out_path, split_suffix))
     
 
-if __name__ == '__main__':
+if __name__ == '__main__': # Runtime ~ 15 minutes on GPU with train, val, and test sets of size 7000, 700, 1500 
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', type=str, default='data/interim/greengenes/', help='Output data path')
     parser.add_argument('--train_size', type=int, default=7000, help='Training sequences')
