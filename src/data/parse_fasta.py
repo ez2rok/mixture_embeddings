@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 
 from edit_distance import edit_distance
 from util.alphabets import alphabets
-from util.data_handling import save_as_pickle
+from util.data_handling.data_loader import save_as_pickle
 
 
 def load_fasta(path):
