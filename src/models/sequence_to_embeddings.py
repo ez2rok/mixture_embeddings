@@ -94,7 +94,7 @@ def main(model_path, auxillary_data_path, out_dir, device='cuda:0'):
     
     print('Saving...')
     save_as_pickle(sequences_df, '{}sequences_df.pickle'.format(out_dir))
-    save_as_pickle(id_to_emb_seq, '{}id_to_emb_seq.pickle'.format(out_dir))
+    save_as_pickle(id_to_emb_seq, '{}id_to_embbedding_sequence.pickle'.format(out_dir))
     print('Done!')
     return out_dir
 
