@@ -14,10 +14,9 @@ def load_fasta(path):
     id_to_str_seq. Also, compute the maximum sequence length."""
         
     id_to_str_seq = {}
-    length = 0
-    
+    length = 0 
+
     with open(path, 'r') as f:
-        
         while True:
             id_ = f.readline()
             if not id_:
@@ -26,10 +25,11 @@ def load_fasta(path):
             if not str_seq: 
                 break
             
-            length = max(length, len(str_seq))
+            str_seq = str_seq.strip()
             id_ = int(id_[1:].strip())
             id_to_str_seq[id_] = str_seq
-                    
+            
+            length = max(length, len(str_seq))            
     return id_to_str_seq, length
 
 
@@ -142,4 +142,3 @@ if __name__ == '__main__': # Runtime ~ 15 minutes on GPU with train, val, and te
         
     dataset_splits = {'train': args.train_size, 'val': args.val_size, 'test': args.test_size}
     main(dataset_splits, alphabets[args.alphabet], args.input, args.out)
-    
