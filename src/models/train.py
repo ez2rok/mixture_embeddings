@@ -95,7 +95,7 @@ def execute_train(model_class, model_args, args):
     print('Total params', total_params)
     
     # create output directory
-    filename = '{}{}.pickle'.format(args.out, model_class.__name__)
+    filename = '{}tmp/{}.pickle'.format(args.out, model_class.__name__)
     directory = os.path.dirname(filename)
     if directory != '' and not os.path.exists(directory):
         os.makedirs(directory)
@@ -122,10 +122,10 @@ def execute_train(model_class, model_args, args):
 
         if loss_val[0] < best:
             # save current model
-            torch.save(model.state_dict(), '{}{}.pkl'.format(args.out, epoch))
+            torch.save(model.state_dict(), '{}tmp/{}.pkl'.format(args.out, epoch))
             # remove previous model
             if best_epoch >= 0:
-                os.remove('{}{}.pkl'.format(args.out, best_epoch))
+                os.remove('{}tmp/{}.pkl'.format(args.out, best_epoch))
             # update training variables
             best = loss_val[0]
             best_epoch = epoch
@@ -142,8 +142,8 @@ def execute_train(model_class, model_args, args):
 
     # Restore best model
     print('Loading {}th epoch'.format(best_epoch + 1))
-    model.load_state_dict(torch.load('{}{}.pkl'.format(args.out, best_epoch)))
-    os.remove('{}{}.pkl'.format(args.out, best_epoch))
+    model.load_state_dict(torch.load('{}tmp/{}.pkl'.format(args.out, best_epoch)))
+    os.remove('{}tmp/{}.pkl'.format(args.out, best_epoch))
 
     # Testing
     for dset in loaders.keys():
@@ -167,7 +167,7 @@ def execute_train(model_class, model_args, args):
             print('Final results {}: loss = {:.6f}  MAPE {:.4f}'.format(dset, *avg_loss))
 
     # save model
-    filename = '{}{}_{}.pickle'.format(args.out, model_class.__name__, time.strftime("%Y_%m_%d_%H%M%S"))
+    filename = '{}{}.pickle'.format(args.out, model_class.__name__)
     torch.save((model_class, model_args, model.embedding_model.state_dict(), args.distance), filename)
 
 
