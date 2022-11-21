@@ -9,9 +9,9 @@ import numpy as np
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from edit_distance.task.dataset import EditDistanceDatasetSampled, EditDistanceDatasetComplete
-from edit_distance.models.hyperbolics import RAdam
-from edit_distance.models.pair_encoder import PairEmbeddingDistance
+from src.models.task.dataset import EditDistanceDatasetSampled, EditDistanceDatasetComplete
+from src.models.hyperbolics import RAdam
+from src.models.pair_encoder import PairEmbeddingDistance
 from util.data_handling.data_loader import get_dataloaders
 from util.ml_and_math.loss_functions import MAPE
 from util.ml_and_math.loss_functions import AverageMeter
@@ -41,7 +41,7 @@ def general_arg_parser():
     parser.add_argument('--extr_data_path', type=str, default='', help='Dataset for further edit distance tests')
     parser.add_argument('--scaling', type=str, default='False', help='Project to hypersphere (for hyperbolic)')
     parser.add_argument('--hyp_optimizer', type=str, default='Adam', help='Optimizer for hyperbolic (Adam or RAdam)')
-    parser.add_argument('--out', type=str, default='../../models/', help='Output path to save model')
+    parser.add_argument('--out', type=str, default='models/', help='Output path to save model')
     return parser
 
 
@@ -74,7 +74,7 @@ def execute_train(model_class, model_args, args):
     embedding_model = model_class(**vars(model_args))
     model = PairEmbeddingDistance(embedding_model=embedding_model, distance=args.distance, scaling=args.scaling)
     model.to(device)
-
+    
     # select optimizer
     if args.distance == 'hyperbolic' and args.hyp_optimizer == 'RAdam':
         optimizer = RAdam(model.parameters(), lr=args.lr)

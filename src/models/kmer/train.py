@@ -1,5 +1,5 @@
-from edit_distance.models.kmer.model import Kmer
-from edit_distance.train import execute_train, general_arg_parser
+from src.models.kmer.model import Kmer
+from src.models.train import execute_train, general_arg_parser
 
 parser = general_arg_parser()
 parser.add_argument('--k', type=int, default=4, help='Size of kernel')

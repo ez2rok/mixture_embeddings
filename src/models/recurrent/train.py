@@ -1,5 +1,5 @@
-from edit_distance.models.recurrent.model import GRU
-from edit_distance.train import execute_train, general_arg_parser
+from src.models.recurrent.model import GRU
+from src.models.train import execute_train, general_arg_parser
 
 parser = general_arg_parser()
 parser.add_argument('--recurrent_layers', type=int, default=1, help='Number of recurrent layers')

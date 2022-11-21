@@ -1,5 +1,5 @@
-from edit_distance.models.feedforward.model import MLPEncoder
-from edit_distance.train import execute_train, general_arg_parser
+from src.models.feedforward.model import MLPEncoder
+from src.models.train import execute_train, general_arg_parser
 from util.data_handling.data_loader import BOOL_CHOICE
 
 parser = general_arg_parser()
