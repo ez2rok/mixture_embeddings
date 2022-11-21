@@ -18,6 +18,7 @@ def load(model_path, auxillary_data_path):
     
     # load embedding layer
     model_class, model_args, model_state_dict, _ = torch.load(model_path)
+    model_name = model_class.__name__
     encoder = model_class(**vars(model_args))
     encoder.load_state_dict(model_state_dict)
     encoder.eval()
@@ -26,7 +27,7 @@ def load(model_path, auxillary_data_path):
     auxillary_data = load_dataset(auxillary_data_path)
     id_to_str_seq, id_to_split_idxs, alphabet, length = auxillary_data
         
-    return encoder, id_to_str_seq, id_to_split_idxs, alphabet, length
+    return encoder, id_to_str_seq, id_to_split_idxs, alphabet, length, model_name
 
 
 def str_seq_to_num_seq(s, alphabet, length):
@@ -58,7 +59,6 @@ def get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, 
     "Get a dataframe mapping an id to the string, numerical, encoded, and embedded sequences"
     
     sequences_df = []
-    id_to_emb_seq = {}
     
     for id_ in tqdm(id_to_str_seq.keys()):
         str_seq = id_to_str_seq[id_]
@@ -67,7 +67,6 @@ def get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, 
         enc_seq = enc_seq.reshape(1, -1)
         emb_seq = encoder(enc_seq).squeeze().detach().cpu().numpy()
         
-        id_to_emb_seq[id_] = emb_seq
         sequence = {'id': id_,
                     'string': str_seq,
                     'numerical': num_seq,
@@ -81,29 +80,42 @@ def get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, 
                 sequences_df[-1].update({'split': split, 'split_idx': id_to_s_idxs[id_]})
                 
     sequences_df = pd.DataFrame(sequences_df)
-    return sequences_df, id_to_emb_seq
+    return sequences_df
+
+
+def get_id_to_embedding(id_to_str_seq, alphabet, length, device, encoder):
+    "Map a sequence id to its embedding"
+    
+    id_to_emb_seq = {}
+    
+    for id_ in tqdm(id_to_str_seq.keys()):
+        str_seq = id_to_str_seq[id_]
+        num_seq = str_seq_to_num_seq(str_seq, alphabet, length)
+        enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device)
+        enc_seq = enc_seq.reshape(1, -1)
+        emb_seq = encoder(enc_seq).squeeze().detach().cpu().numpy()
+        id_to_emb_seq[id_] = emb_seq
+        break
+                    
+    return id_to_emb_seq
 
 
 def main(model_path, auxillary_data_path, out_dir, device='cuda:0'):
     
     print('Loading model and auxillary data...')
-    encoder, id_to_str_seq, id_to_split_idxs, alphabet, length = load(model_path, auxillary_data_path)
-    
+    encoder, id_to_str_seq, id_to_split_idxs, alphabet, length, model_name = load(model_path, auxillary_data_path)
+
     print('Converting sequences to embeddings...')
-    sequences_df, id_to_emb_seq = get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, encoder)
+    id_to_emb_seq = get_id_to_embedding(id_to_str_seq, alphabet, length, device, encoder)
+    # sequences_df = get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, encoder)
     
     print('Saving...')
-    save_as_pickle(sequences_df, '{}sequences_df.pickle'.format(out_dir))
-    save_as_pickle(id_to_emb_seq, '{}id_to_embbedding_sequence.pickle'.format(out_dir))
+    save_as_pickle(id_to_emb_seq, '{}{}_id_to_embedding.pickle'.format(out_dir, model_name.lower()))
     print('Done!')
     return out_dir
 
 
 if __name__ == '__main__': # Runtime ~ 10 minutes
-    #############################
-    # Run from mixture_embeddings directory with the command
-    # python src/models/sequence_to_embeddings.py --model models/MLPEncoder_2022_11_13_233302.pickle --aux_data data/interim/greengenes/auxillary_data_10_10_10.pickle
-    #############################
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', type=str, default='data/processed/greengenes/', help='Output data path')
