@@ -7,8 +7,7 @@
 # data/interim/moms_pi directory
 
 # Run this script from mixture_embeddings directory
-
-destination='data/interim/moms_pi'
+destination='data/raw/moms_pi'
 
 mkdir -p $destination
 
