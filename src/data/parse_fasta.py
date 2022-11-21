@@ -139,6 +139,7 @@ if __name__ == '__main__': # Runtime ~ 15 minutes on GPU with train, val, and te
     parser.add_argument('--alphabet', type=str, default='DNA', help="Alphabet of genetic sequence. Chose from 'DNA', 'PROTEIN', 'IUPAC', or 'ENGLISH")
     parser.add_argument('--input', type=str, default='data/raw/greengenes/gg_12_10.fasta', help='Input data path. Must be FASTA file.')
     args = parser.parse_args()
-    
+        
     dataset_splits = {'train': args.train_size, 'val': args.val_size, 'test': args.test_size}
     main(dataset_splits, alphabets[args.alphabet], args.input, args.out)
+    
