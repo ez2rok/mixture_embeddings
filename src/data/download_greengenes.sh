@@ -11,5 +11,5 @@ mkdir -p $destination
 
 # Download greengenes and unzip it in the `data/raw/greengenes` directory
 wget -v $url -P $destination
-gzip -dkrvc $destination/gg_12_10.fasta.gz > $destination/gg_12_10.fasta
-rm $destination/gg_12_10.fasta.gz
+gzip -dkrvc $destination/gg_13_5.fasta.gz > $destination/gg_13_5.fasta
+rm $destination/gg_13_5.fasta.gz
