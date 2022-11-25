@@ -124,10 +124,9 @@ def main(dataset_splits, alphabet, input_path, out_path):
     
     # save data
     print('\n', '-'*10, 'SAVING', '-'*10)
-    split_suffix = '{}_{}_{}'.format(*dataset_splits.values())
     auxillary_data = id_to_str_seq, id_to_split_idxs, alphabet, length
-    save_as_pickle(auxillary_data, filename='{}auxillary_data_{}.pickle'.format(out_path, split_suffix))
-    save_as_pickle((sequences, distances), filename='{}sequences_distances_{}.pickle'.format(out_path, split_suffix))
+    save_as_pickle(auxillary_data, filename='{}auxillary_data.pickle'.format(out_path))
+    save_as_pickle((sequences, distances), filename='{}sequences_distances.pickle'.format(out_path))
     
 
 if __name__ == '__main__': # Runtime ~ 15 minutes on GPU with train, val, and test sets of size 7000, 700, 1500 
