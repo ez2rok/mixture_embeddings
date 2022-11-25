@@ -74,7 +74,7 @@ def execute_train(model_class, model_args, args):
     embedding_model = model_class(**vars(model_args))
     model = PairEmbeddingDistance(embedding_model=embedding_model, distance=args.distance, scaling=args.scaling)
     model.to(device)
-    
+        
     # select optimizer
     if args.distance == 'hyperbolic' and args.hyp_optimizer == 'RAdam':
         optimizer = RAdam(model.parameters(), lr=args.lr)
@@ -153,22 +153,24 @@ def execute_train(model_class, model_args, args):
             avg_loss = test(model, loaders[dset], loss, device)
         print('Final results {}: loss = {:.6f}  MAPE {:.4f}'.format(dset, *avg_loss))
 
-    # Extra datasets testing (e.g. extrapolation)
-    if args.extr_data_path != '':
-        print("Extra datasets testing")
-        datasets = load_edit_distance_dataset(args.extr_data_path)
-        loaders = get_dataloaders(datasets, batch_size=max(1, args.batch_size // 8), workers=args.workers)
+    # # Extra datasets testing (e.g. extrapolation)
+    # if args.extr_data_path != '':
+    #     print("Extra datasets testing")
+    #     datasets = load_edit_distance_dataset(args.extr_data_path)
+    #     loaders = get_dataloaders(datasets, batch_size=max(1, args.batch_size // 8), workers=args.workers)
 
-        for dset in loaders.keys():
-            if args.plot:
-                avg_loss = test_and_plot(model, loaders[dset], loss, device, dset)
-            else:
-                avg_loss = test(model, loaders[dset], loss, device)
-            print('Final results {}: loss = {:.6f}  MAPE {:.4f}'.format(dset, *avg_loss))
+    #     for dset in loaders.keys():
+    #         if args.plot:
+    #             avg_loss = test_and_plot(model, loaders[dset], loss, device, dset)
+    #         else:
+    #             avg_loss = test(model, loaders[dset], loss, device)
+    #         print('Final results {}: loss = {:.6f}  MAPE {:.4f}'.format(dset, *avg_loss))
 
     # save model
     filename = '{}{}.pickle'.format(args.out, model_class.__name__)
-    torch.save((model_class, model_args, model.embedding_model.state_dict(), args.distance), filename)
+    data = (model_class, model_args, model.embedding_model.state_dict(),
+            args.distance, model.state_dict()['radius'], model.state_dict()['scaling'])
+    torch.save(data, filename)
 
 
 def load_edit_distance_dataset(path):
