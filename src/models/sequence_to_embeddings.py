@@ -17,7 +17,7 @@ def load(model_path, auxillary_data_path):
     """Load the model and the auxillary_data"""
     
     # load embedding layer
-    model_class, model_args, model_state_dict, _ = torch.load(model_path)
+    model_class, model_args, model_state_dict, _, _, _ = torch.load(model_path)
     model_name = model_class.__name__
     encoder = model_class(**vars(model_args))
     encoder.load_state_dict(model_state_dict)
@@ -88,14 +88,13 @@ def get_id_to_embedding(id_to_str_seq, alphabet, length, device, encoder):
     
     id_to_emb_seq = {}
     
-    for id_ in tqdm(id_to_str_seq.keys()):
+    for i, id_ in tqdm(enumerate(id_to_str_seq.keys())):
         str_seq = id_to_str_seq[id_]
         num_seq = str_seq_to_num_seq(str_seq, alphabet, length)
         enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device)
         enc_seq = enc_seq.reshape(1, -1)
         emb_seq = encoder(enc_seq).squeeze().detach().cpu().numpy()
         id_to_emb_seq[id_] = emb_seq
-        break
                     
     return id_to_emb_seq
 
