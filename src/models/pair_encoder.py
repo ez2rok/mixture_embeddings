@@ -20,15 +20,22 @@ class PairEmbeddingDistance(nn.Module):
             self.scaling = nn.Parameter(torch.Tensor([1.]), requires_grad=True)
 
     def normalize_embeddings(self, embeddings):
-        """ Project embeddings to an hypersphere of a certain radius """
+        "Wrapper for _normalize_embeddings."
+        return self._normalize_embeddings(embeddings, self.radius, self.distance_str)
+
+    @staticmethod
+    def _normalize_embeddings(embeddings, radius, distance_str):
+        """ Project embeddings to an hypersphere of a certain radius.
+        This is static method so that we can call this function in other files
+        without instantiating an entire PairEmbeddingDistance object."""
         min_scale = 1e-7
 
-        if self.distance_str == 'hyperbolic':
+        if distance_str == 'hyperbolic':
             max_scale = 1 - 1e-3
         else:
             max_scale = 1e10
 
-        return F.normalize(embeddings, p=2, dim=1) * self.radius.clamp_min(min_scale).clamp_max(max_scale)
+        return F.normalize(embeddings, p=2, dim=1) * radius.clamp_min(min_scale).clamp_max(max_scale)
 
     def encode(self, sequence):
         """ Use embedding model and normalization to encode some sequences. """
