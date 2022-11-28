@@ -32,14 +32,15 @@ def load(otu_table_path, id_to_embedding_path, model_path, sample_data_to_sample
     sample_data_to_sample_id = load_dataset(sample_data_to_sample_id_path)
     return otu_tables, id_to_embedding, distance_str, radius, sample_data_to_sample_id
     
+    
 def normalize_otu_table(otu_tables):
     return {otu_type: otu_table.norm() for otu_type, otu_table in otu_tables.items()}
+
 
 def drop_missing_ids(otu_tables, id_to_embedding, verbose=False):
     "Remove ids from the OTU matrix that are not found in the greengenes dataset."
     
     otu_tables_cleaned = {}
-    
     for otu_type, otu_table in otu_tables.items():
         
         ids = otu_table.ids(axis='observation')
@@ -50,7 +51,6 @@ def drop_missing_ids(otu_tables, id_to_embedding, verbose=False):
         if verbose:
             valid_ratio = len(valid_ids) / len(ids)
             print(f'{otu_type}: {valid_ratio:.2%} of ids are valid')
-            
     return otu_tables_cleaned
 
 
