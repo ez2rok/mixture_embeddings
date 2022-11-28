@@ -37,6 +37,14 @@ PYTHON_INTERPRETER = python
 # Commands
 #################################################################################
 
+mixture_embeddings: src/data/make_mixture_embeddings.py src/data/parse_moms_pi.py
+	$(PYTHON_INTERPRETER) $< \
+		--moms_pi_tables_path 'data/interim/moms_pi/16s_tables.pkl' \
+		--id_to_embedding_path 'data/processed/greengenes/mlpencoder_id_to_embedding.pickle' \
+		--model_path 'models/MLPEncoder.pickle' \
+		--sample_data_to_sample_id_path 'data/interim/moms_pi/sample_data_to_sample_id.pickle' \
+		--out_path 'data/processed/greengenes/mixture_embeddings.pickle'
+
 models: $(FEEDFORWARD_MODEL) $(TRANSFORMER_MODEL) $(PROCESSED_GREENGENES_DIR)mlpencoder_id_to_embedding.pickle
 
 
