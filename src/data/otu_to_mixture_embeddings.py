@@ -10,6 +10,7 @@ from tqdm import tqdm
 from util.data_handling.data_loader import load_dataset
 from src.models.pair_encoder import PairEmbeddingDistance
 
+from icecream import ic
 
 otu_type_to_sample_body_site = {
     'MCKD': 'buccal_mucosa',
@@ -67,14 +68,15 @@ def get_normalized_embeddings(otu_tables, id_to_embedding, distance_str, radius)
     return embeddings_normed
 
 
-def get_embeddings(otu_tables, embeddings, sample_data_to_sample_id):
+def get_mixture_embeddings(otu_tables, embeddings, sample_data_to_sample_id):
     """For each sample body site, compute the Frechet mean of the embeddings of
     each OTU weighted by the relative abundance of the OTU in the sample. Return
     a dictionary mapping sample ids to embeddings."""
     
-    hyperbolic = Hyperbolic(dim=128, default_coords_type='ball')
+    embedding_size = list(embeddings.values())[0].shape[1]
+    hyperbolic = Hyperbolic(dim=embedding_size, default_coords_type='ball')
     fmean = FrechetMean(hyperbolic.metric, max_iter=100, method='adaptive')
-    mixture_embeddings = {}
+    sample_id_to_mixture_embedding = {}
     
     # loop over all sample body sites and their corresponding otu tables and otu embeddings
     for otu_type in otu_tables.keys():
@@ -96,15 +98,15 @@ def get_embeddings(otu_tables, embeddings, sample_data_to_sample_id):
             # map the sample id to the mixture embedding
             sample_data = subject_ids[i] + '_' + visit_numbers[i] + '_' + sample_body_site
             sample_id = sample_data_to_sample_id[sample_data]
-            assert sample_id not in mixture_embeddings # make sure we don't have duplicate sample ids from different otu tables
-            mixture_embeddings[sample_id] = mixture_embedding
+            assert sample_id not in sample_id_to_mixture_embedding # make sure we don't have duplicate sample ids from different otu tables
+            sample_id_to_mixture_embedding[sample_id] = mixture_embedding
             
-    return mixture_embeddings
+    return sample_id_to_mixture_embedding
 
 
-def save(mixture_embeddings, path):
+def save(sample_id_to_mixture_embedding, path):
     with open(path, 'wb') as f:
-        pickle.dump(mixture_embeddings, f)
+        pickle.dump(sample_id_to_mixture_embedding, f)
     return path
 
 
@@ -122,9 +124,9 @@ def main(moms_pi_tables_path, id_to_embedding_path, model_path, out_path, sample
     embeddings_normed = get_normalized_embeddings(otu_tables_cleaned, id_to_embedding, distance_str, radius)
     
     print('Computing mixture embeddings seperately for each of the 10 sample body sites...')
-    mixture_embeddings = get_embeddings(otu_tables_cleaned, embeddings_normed, sample_data_to_sample_id)
-    save(mixture_embeddings, out_path)
-    return mixture_embeddings
+    sample_id_to_mixture_embedding = get_mixture_embeddings(otu_tables_cleaned, embeddings_normed, sample_data_to_sample_id)
+    save(sample_id_to_mixture_embedding, out_path)
+    return sample_id_to_mixture_embedding
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -132,7 +134,7 @@ if __name__ == '__main__':
     parser.add_argument('--id_to_embedding_path', type=str, default='data/processed/greengenes/mlpencoder_id_to_embedding.pickle')
     parser.add_argument('--model_path', type=str, default='models/MLPEncoder.pickle')
     parser.add_argument('--sample_data_to_sample_id_path', type=str, default='data/interim/moms_pi/sample_data_to_sample_id.pickle')
-    parser.add_argument('--out_path', type=str, default='data/processed/greengenes/mixture_embeddings.pickle')
+    parser.add_argument('--out_path', type=str, default='data/processed/greengenes/sample_id_to_mixture_embedding.pickle')
     args = parser.parse_args()
     
     main(args.moms_pi_tables_path, args.id_to_embedding_path, args.model_path, args.out_path, args.sample_data_to_sample_id_path)
