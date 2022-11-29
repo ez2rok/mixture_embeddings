@@ -1,6 +1,7 @@
-# exclude data and models by default
+# exclude data, models, notebooks by default
 /data/
 /models/
+/notebooks/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
