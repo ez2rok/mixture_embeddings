@@ -10,7 +10,6 @@ from tqdm import tqdm
 from util.data_handling.data_loader import load_dataset
 from src.models.pair_encoder import PairEmbeddingDistance
 
-from icecream import ic
 
 otu_type_to_sample_body_site = {
     'MCKD': 'buccal_mucosa',
