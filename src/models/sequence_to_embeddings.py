@@ -39,22 +39,6 @@ def str_seq_to_num_seq(s, alphabet, length):
     return L
 
 
-def str_seq_to_embedding(str_seq, alphabet, length, device, encoder):
-    "convert string sequence to numerical sequence, one-hot encoded sequence, and embedded sequence"
-    
-    num_seq = str_seq_to_num_seq(str_seq, alphabet, length)
-    enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device)
-    enc_seq = enc_seq.reshape(1, -1)
-    emb_seq = encoder(enc_seq).squeeze().detach().cpu().numpy()
-    
-    sequence = {'string': str_seq,
-                'numerical': num_seq,
-                'encoded': enc_seq.squeeze().detach().cpu().numpy(),
-                'embedding': emb_seq
-                }
-    return sequence
-
-
 def get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, encoder):
     "Get a dataframe mapping an id to the string, numerical, encoded, and embedded sequences"
     
