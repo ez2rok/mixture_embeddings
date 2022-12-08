@@ -11,7 +11,7 @@ def plot_edit_distance_approximation(y_pred, y_true, model_name, dataset, mape):
     plt.title('Edit distance approximation\n{} MAPE={:.4f} ({})'.format(model_name, mape, dataset))
     ax.set(xlabel='Predicted distance', ylabel='Real distance')
    
-    filename = 'figures/{}_{}.png'.format(model_name, dataset)
+    filename = 'reports/figures/{}_{}.png'.format(model_name, dataset)
     directory = os.path.dirname(filename)
     if directory != '' and not os.path.exists(directory):
         os.makedirs(directory)

@@ -9,12 +9,14 @@ import numpy as np
 import torch
 import torch.optim as optim
 import torch.nn as nn
+
 from src.models.task.dataset import EditDistanceDatasetSampled, EditDistanceDatasetComplete
 from src.models.hyperbolics import RAdam
 from src.models.pair_encoder import PairEmbeddingDistance
 from util.data_handling.data_loader import get_dataloaders
 from util.ml_and_math.loss_functions import MAPE
 from util.ml_and_math.loss_functions import AverageMeter
+from src.visualization.visualize import plot_edit_distance_approximation
 
 
 def general_arg_parser():
@@ -74,7 +76,7 @@ def execute_train(model_class, model_args, args):
     embedding_model = model_class(**vars(model_args))
     model = PairEmbeddingDistance(embedding_model=embedding_model, distance=args.distance, scaling=args.scaling)
     model.to(device)
-        
+            
     # select optimizer
     if args.distance == 'hyperbolic' and args.hyp_optimizer == 'RAdam':
         optimizer = RAdam(model.parameters(), lr=args.lr)
@@ -116,7 +118,7 @@ def execute_train(model_class, model_args, args):
         if epoch % args.print_every == 0:
             print('Epoch: {:04d}'.format(epoch + 1),
                   'loss_train: {:.6f}'.format(loss_train),
-                  'loss_val: {:.6f} MAPE {:.4f}'.format(*loss_val),
+                  'loss_val: {:.6f} MAPE: {:.4f}'.format(*loss_val),
                   'time: {:.4f}s'.format(time.time() - t))
             sys.stdout.flush()
 
@@ -148,10 +150,10 @@ def execute_train(model_class, model_args, args):
     # Testing
     for dset in loaders.keys():
         if args.plot:
-            avg_loss = test_and_plot(model, loaders[dset], loss, device, dset)
+            avg_loss = test_and_plot(model, loaders[dset], loss, device, dset, model_class.__name__)
         else:
             avg_loss = test(model, loaders[dset], loss, device)
-        print('Final results {}: loss = {:.6f}  MAPE {:.4f}'.format(dset, *avg_loss))
+        print('Final results {}: loss = {:.6f}  MAPE = {:.4f}'.format(dset, *avg_loss))
 
     # # Extra datasets testing (e.g. extrapolation)
     # if args.extr_data_path != '':
@@ -161,7 +163,7 @@ def execute_train(model_class, model_args, args):
 
     #     for dset in loaders.keys():
     #         if args.plot:
-    #             avg_loss = test_and_plot(model, loaders[dset], loss, device, dset)
+    #             avg_loss = test_and_plot(model, loaders[dset], loss, device, dset, model_class.__name__)
     #         else:
     #             avg_loss = test(model, loaders[dset], loss, device)
     #         print('Final results {}: loss = {:.6f}  MAPE {:.4f}'.format(dset, *avg_loss))
@@ -230,7 +232,7 @@ def test(model, loader, loss, device):
     return avg_loss.avg
 
 
-def test_and_plot(model, loader, loss, device, dataset):
+def test_and_plot(model, loader, loss, device, dataset, model_name):
     avg_loss = AverageMeter(len_tuple=2)
     model.eval()
 
@@ -251,11 +253,11 @@ def test_and_plot(model, loader, loss, device, dataset):
         output_list.append(output.cpu().detach().numpy())
         labels_list.append(labels.cpu().detach().numpy())
 
-    # save real and predicted distances for offline plotting
     outputs = np.concatenate(output_list, axis=0)
     labels = np.concatenate(labels_list, axis=0)
-    pickle.dump((outputs, labels), open(dataset + ".pkl", "wb"))
-    # plt.plot(outputs, labels, 'o', color='black')
-    # plt.show()
+    
+    # plot real vs predicted distances and save the figures
+    mape = avg_loss.avg[1]
+    plot_edit_distance_approximation(outputs, labels, model_name, dataset, mape)
 
     return avg_loss.avg
