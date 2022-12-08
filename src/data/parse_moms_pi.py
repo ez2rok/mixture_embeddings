@@ -25,9 +25,6 @@ def get_sample_data_to_sample_id(metadata, manifest):
     return sample_data_to_sample_id
 
 
-
-
-
 def normalize_otu_table(otu_tables):
     return {otu_type: otu_table.norm() for otu_type, otu_table in otu_tables.items()}
 
@@ -49,9 +46,9 @@ def drop_missing_ids(otu_tables, id_to_str_seq, verbose=False):
     return otu_tables_cleaned
 
 
-def save(sample_data_to_sample_id, path):
+def save(obj, path):
     with open(path, 'wb') as f:
-        pickle.dump(sample_data_to_sample_id, f)
+        pickle.dump(obj, f)
     return path
 
 
@@ -69,6 +66,7 @@ def main(auxillary_data_path, otu_tables_path, metadata_path, manifest_path, out
     save(otu_tables_normed_and_cleaned, out_dir + 'otu_tables_normed_and_cleaned.pickle')
     save(sample_data_to_sample_id, out_dir + 'sample_data_to_sample_id.pickle')
     return otu_tables_normed_and_cleaned, sample_data_to_sample_id
+    
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
