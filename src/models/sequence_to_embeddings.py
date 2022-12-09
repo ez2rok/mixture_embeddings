@@ -9,6 +9,7 @@ import torch.nn as nn
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+from icecream import ic
 
 from util.data_handling.data_loader import index_to_one_hot, load_dataset, save_as_pickle
 
@@ -39,44 +40,50 @@ def str_seq_to_num_seq(s, alphabet, length):
     return L
 
 
-def get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, encoder):
-    "Get a dataframe mapping an id to the string, numerical, encoded, and embedded sequences"
+# def get_sequences_df(id_to_str_seq, id_to_split_idxs, alphabet, length, device, encoder):
+#     "Get a dataframe mapping an id to the string, numerical, encoded, and embedded sequences"
     
-    sequences_df = []
+#     sequences_df = []
     
-    for id_ in tqdm(id_to_str_seq.keys()):
-        str_seq = id_to_str_seq[id_]
-        num_seq = str_seq_to_num_seq(str_seq, alphabet, length)
-        enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device)
-        enc_seq = enc_seq.reshape(1, -1)
-        emb_seq = encoder(enc_seq).squeeze().detach().cpu().numpy()
+#     for id_ in tqdm(id_to_str_seq.keys()):
+#         str_seq = id_to_str_seq[id_]
+#         num_seq = str_seq_to_num_seq(str_seq, alphabet, length)
+#         enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device).reshape(1, -1).detach().cpu()
+#         emb_seq = encoder(enc_seq).squeeze().detach().cpu().numpy()
         
-        sequence = {'id': id_,
-                    'string': str_seq,
-                    'numerical': num_seq,
-                    'encoded': enc_seq.squeeze().detach().cpu().numpy(),
-                    'embedding': emb_seq
-                    }
-        sequences_df.append(sequence)
+#         sequence = {'id': id_,
+#                     'string': str_seq,
+#                     'numerical': num_seq,
+#                     'encoded': enc_seq.squeeze().detach().cpu().numpy(),
+#                     'embedding': emb_seq
+#                     }
+#         sequences_df.append(sequence)
         
-        for split, id_to_s_idxs in id_to_split_idxs.items():
-            if id_ in id_to_s_idxs:
-                sequences_df[-1].update({'split': split, 'split_idx': id_to_s_idxs[id_]})
+#         for split, id_to_s_idxs in id_to_split_idxs.items():
+#             if id_ in id_to_s_idxs:
+#                 sequences_df[-1].update({'split': split, 'split_idx': id_to_s_idxs[id_]})
                 
-    sequences_df = pd.DataFrame(sequences_df)
-    return sequences_df
+#     sequences_df = pd.DataFrame(sequences_df)
+#     return sequences_df
 
 
 def get_id_to_embedding(id_to_str_seq, alphabet, length, device, encoder):
-    "Map a sequence id to its embedding"
+    """Map an otu sequence id to its embedding. 
+    
+    Notes:
+    1.  enc_seq refers to a one-hot encoded sequence, not the output of the
+        encoder. The output of the encoder is the embedding, emb_seq.
+    2.  emb_seq is not normalized so it is not on the Poincare Ball.
+    3.  We run the enc_seq through the trained encoder on the CPU, not for GPU.
+        I should proably change this to be on the GPU...
+    """
     
     id_to_emb_seq = {}
     
     for i, id_ in tqdm(enumerate(id_to_str_seq.keys())):
         str_seq = id_to_str_seq[id_]
         num_seq = str_seq_to_num_seq(str_seq, alphabet, length)
-        enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device)
-        enc_seq = enc_seq.reshape(1, -1)
+        enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device).reshape(1, -1).detach().cpu()
         emb_seq = encoder(enc_seq).squeeze().detach().cpu().numpy()
         id_to_emb_seq[id_] = emb_seq
                     
