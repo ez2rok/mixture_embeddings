@@ -80,7 +80,7 @@ def get_id_to_embedding(id_to_str_seq, alphabet, length, device, encoder):
     
     id_to_emb_seq = {}
     
-    for i, id_ in tqdm(enumerate(id_to_str_seq.keys())):
+    for id_ in tqdm(id_to_str_seq.keys()):
         str_seq = id_to_str_seq[id_]
         num_seq = str_seq_to_num_seq(str_seq, alphabet, length)
         enc_seq = index_to_one_hot(num_seq, alphabet_size=len(alphabet), device=device).reshape(1, -1).detach().cpu()
