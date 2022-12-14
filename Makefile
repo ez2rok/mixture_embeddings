@@ -95,7 +95,7 @@ $(MLP_MODEL): src/models/feedforward/train.py src/models/train.py $(INTERIM_GREE
 		--batch_norm=True --lr=0.01 --weight_decay=0.00001 \
 		--dropout=0.0 --embedding_size=128 --hidden_size=256 \
 		--layer=3 --print_every=5 --patience=50 --epochs=500 \
-		--batch_size=128 --plot
+		--batch_size=128 --plot --save
 	@touch $(MLP_MODEL)
 
 # train transformer model
@@ -107,7 +107,7 @@ $(TRANSFORMER_MODEL): src/models/transformer/train.py src/models/train.py $(INTE
 		--lr=0.01 --weight_decay=0.0 --layer_norm=True \
 		--dropout=0.0 --embedding_size=128 --hidden_size=256 \
 		--print_every=5 --patience=50 --epochs=500 \
-		--batch_size=128 --plot
+		--batch_size=128 --plot --save
 	@touch $(TRANSFORMER_MODEL)
 
 ##############################################################################

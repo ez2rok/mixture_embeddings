@@ -44,6 +44,7 @@ def general_arg_parser():
     parser.add_argument('--scaling', type=str, default='False', help='Project to hypersphere (for hyperbolic)')
     parser.add_argument('--hyp_optimizer', type=str, default='Adam', help='Optimizer for hyperbolic (Adam or RAdam)')
     parser.add_argument('--out', type=str, default='models/', help='Output path to save model')
+    parser.add_argument('--save', action='store_true', default=False, help='Save best model')
     return parser
 
 
@@ -57,7 +58,7 @@ def execute_train(model_class, model_args, args):
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     if args.cuda:
-        torch.cuda.manual_seed(args.seed)
+        torch.cuda.manual_seed(args.seed) 
 
     # load data
     datasets = load_edit_distance_dataset(args.data)
@@ -169,10 +170,11 @@ def execute_train(model_class, model_args, args):
     #         print('Final results {}: loss = {:.6f}  MAPE {:.4f}'.format(dset, *avg_loss))
 
     # save model
-    filename = '{}{}.pickle'.format(args.out, model_class.__name__)
-    data = (model_class, model_args, model.embedding_model.state_dict(),
-            args.distance, model.state_dict()['radius'], model.state_dict()['scaling'])
-    torch.save(data, filename)
+    if args.save:
+        filename = '{}{}.pickle'.format(args.out, model_class.__name__)
+        data = (model_class, model_args, model.embedding_model.state_dict(),
+                args.distance, model.state_dict()['radius'], model.state_dict()['scaling'])
+        torch.save(data, filename)
 
 
 def load_edit_distance_dataset(path):
@@ -232,7 +234,7 @@ def test(model, loader, loss, device):
     return avg_loss.avg
 
 
-def test_and_plot(model, loader, loss, device, dataset, model_name):
+def test_and_plot(model, loader, loss, device, dataset, model_name, length=2368):
     avg_loss = AverageMeter(len_tuple=2)
     model.eval()
 
@@ -256,8 +258,11 @@ def test_and_plot(model, loader, loss, device, dataset, model_name):
     outputs = np.concatenate(output_list, axis=0)
     labels = np.concatenate(labels_list, axis=0)
     
+    # compute %rmse (they use this metric in the NeuroSEED paper)
+    mse = avg_loss.avg[0]
+    percent_rmse = 100 / length * np.sqrt(mse) 
+    
     # plot real vs predicted distances and save the figures
-    mape = avg_loss.avg[1]
-    plot_edit_distance_approximation(outputs, labels, model_name, dataset, mape)
+    plot_edit_distance_approximation(outputs, labels, model_name, dataset, percent_rmse)
 
     return avg_loss.avg
