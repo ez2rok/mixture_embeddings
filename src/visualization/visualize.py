@@ -5,14 +5,16 @@ def plot_edit_distance_approximation(y_pred, y_true, model_name, dataset, percen
     
     fig, ax = plt.subplots()
     
-    plt.hist2d(y_pred, y_true, bins=150, cmap='Blues')
-    plt.plot([0, 1], [0, 1], transform=ax.transAxes, color='red', linewidth=2)
+    plt.hist2d(y_pred, y_true, bins=100, cmap='Blues')
+    plt.plot([0, 1], [0, 1], linewidth=2, color='red')
     
-    plt.title('Edit distance approximation\n{} %RMSE={:.4f} ({})'.format(model_name, percent_rmse, dataset))
-    ax.set(xlabel='Predicted distance', ylabel='Real distance')
+    title = 'Edit distance approximation\n{} %RMSE={:.4f} ({})'.format(model_name, percent_rmse, dataset)
+    plt.title(title)
+    ax.set(xlabel='Predicted distance', ylabel='Real distance', xlim=[0, 0.3], ylim=[0, 0.3])
    
     filename = 'reports/figures/{}_{}.png'.format(model_name, dataset)
     directory = os.path.dirname(filename)
     if directory != '' and not os.path.exists(directory):
         os.makedirs(directory)
     fig.savefig(filename)
+    return fig
