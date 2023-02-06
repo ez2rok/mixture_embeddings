@@ -260,7 +260,7 @@ def test_and_plot(model, loader, loss, device, dataset, model_name, length=2368)
     
     # compute %rmse (they use this metric in the NeuroSEED paper)
     mse = avg_loss.avg[0]
-    percent_rmse = 100 / length * np.sqrt(mse) 
+    percent_rmse = 100 / length * np.sqrt(mse)
     
     # plot real vs predicted distances and save the figures
     plot_edit_distance_approximation(outputs, labels, model_name, dataset, percent_rmse)
