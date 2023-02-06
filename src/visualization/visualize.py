@@ -8,7 +8,7 @@ def plot_edit_distance_approximation(y_pred, y_true, model_name, dataset, percen
     plt.hist2d(y_pred, y_true, bins=100, cmap='Blues')
     plt.plot([0, 1], [0, 1], linewidth=2, color='red')
     
-    title = 'Edit distance approximation\n{} %RMSE={:.4f} ({})'.format(model_name, percent_rmse, dataset)
+    title = 'Edit distance approximation\n{} %RMSE={:.4f} ({})'.format(model_name, percent_rmse*100, dataset)
     plt.title(title)
     ax.set(xlabel='Predicted distance', ylabel='Real distance', xlim=[0, 0.3], ylim=[0, 0.3])
    
