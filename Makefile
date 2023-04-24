@@ -4,59 +4,76 @@
 
 # hyper parameters
 ALPHABET = DNA
-TRAIN = 7000
-VAL = 1500
-TEST = 1500
+EPOCHS = 200
+DISTANCE = hyperbolic
+EMBEDDING_SIZE = 16
+
+# number of greengene sequences to use for train, val test split of data
+# values ensure a roughly 80% train, 10% val, 10% test split
+MULTIPLICITY = 11
+TRAIN = 7000 # 7000 * multiplicity samples
+VAL = 100 # 100 * 100 samples
+TEST = 150 # 150 * 150 samples
 
 # directory names
-RAW_GREENGENES_DIR = data/raw/greengenes/
-INTERIM_MOMS_PI_DIR = data/interim/moms_pi/
-INTERIM_GREENGENES_DIR = data/interim/greengenes/
-PROCESSED_GREENGENES_DIR = data/processed/greengenes/
-RAW_MOMS_PI_DIR = data/raw/moms_pi/
-MODELS_DIR = models/
+RAW_DIR = data/raw
+INTERIM_DIR = data/interim
+PROCESSED_DIR = data/processed
+MODELS_DIR = models
+GREENGENES_EMBEDDINGS_DIR = data/processed/greengenes_embeddings
+OTU_EMBEDDINGS_DIR = data/processed/otu_embeddings
+PROCESSED_GREENGENES_DIR = data/processed/greengenes
 
 # file names
-PARSED_GREENGENE_FILES = $(INTERIM_GREENGENES_DIR)sequences_distances.pickle \
-						 $(INTERIM_GREENGENES_DIR)auxillary_data.pickle
-PARSED_MOMS_PI_FILES = $(INTERIM_MOMS_PI_DIR)16s_tables.pkl \
-					   $(INTERIM_MOMS_PI_DIR)otu_tables_normed_and_cleaned.pickle \
-					   $(INTERIM_MOMS_PI_DIR)sample_data_to_sample_id.pickle
-PROCESSED_GREENGENES_FILES = $(PROCESSED_GREENGENES_DIR)id_to_sequence_embedding.pickle
+PROCESSED_GREENGENES_FILES = $(INTERIM_DIR)/greengenes/sequences_distances.pickle \
+						 $(INTERIM_DIR)/greengenes/auxillary_data.pickle
+PROCESSED_IHMP_FILES = $(INTERIM_DIR)/ihmp/ibd_data.pickle \
+					   $(INTERIM_DIR)/ihmp/ibd_metadata.pickle \
+					   $(INTERIM_DIR)/ihmp/t2d_data.pickle \
+					   $(INTERIM_DIR)/ihmp/t2d_metadata.pickle \
+					   $(INTERIM_DIR)/ihmp/moms_data.pickle \
+					   $(INTERIM_DIR)/ihmp/moms_metadata.pickle
 
-MLP_MODEL = models/MLPEncoder.pickle
-TRANSFORMER_MODEL = models/Transformer.pickle 
+TRANSFORMER_H16_MODEL = models/transformer_hyperbolic_16_model.pickle 
+TRANSFORMER_E16_MODEL = models/transformer_euclidean_16_model.pickle
+TRANSFORMER_H128_MODEL = models/transformer_hyperbolic_128_model.pickle
+TRANSFORMER_E128_MODEL = models/transformer_euclidean_128_model.pickle
 
+CNN_H16_MODEL = models/cnn_hyperbolic_16_model.pickle
+CNN_E16_MODEL = models/cnn_euclidean_16_model.pickle
+CNN_H128_MODEL = models/cnn_hyperbolic_128_model.pickle
+CNN_E128_MODEL = models/cnn_euclidean_128_model.pickle
+
+TRANSFORMER_H16_GREENGENES_EMBEDDINGS = $(GREENGENES_EMBEDDINGS_DIR)/transformer_hyperbolic_16_greengenes_embeddings.pickle
+TRANSFORMER_H16_OTU_EMBEDDINGS = $(OTU_EMBEDDINGS_DIR)/transformer_hyperbolic_16_otu_embeddings.pickle
 
 # configurations
 PYTHON_INTERPRETER = python
 .PHONY = all clean \
 		 download_greengenes download_moms_pi \
-		 parse_greengenes parse_moms_pi \
-		 train_transformer train_feedforward train_all \
+		 process_greengenes process_ihmp \
+		 train_transformer train_transformers train_cnn train_cnns \
+		 greengenes_embeddings \
 		 feedforward_otu_embeddings transformer_otu_embeddings \
-		 feedforward_mixture_embeddings \
-
+		 feedforward_mixture_embeddings
 
 ##############################################################################
 # Commands (Phony Targets)
 ##############################################################################
 
-feedforward_mixture_embeddings: src/data/otu_to_mixture_embeddings.py src/data/parse_moms_pi.py
-transformer_mixtures_embeddings: src/data/otu_to_mixture_embeddings.py src/data/parse_moms_pi.py
 
-get_feedforward_otu_embeddings: $(PROCESSED_GREENGENES_DIR)mlpencoder_id_to_embedding.pickle
-get_transformer_otu_embeddings: $(PROCESSED_GREENGENES_DIR)transformer_id_to_embedding.pickle # not implemented
+otu_embeddings: $(TRANSFORMER_H16_OTU_EMBEDDINGS)
+greengenes_embeddings: $(TRANSFORMER_H16_GREENGENES_EMBEDDINGS)
 
-train_all: train_transformer train_feedforward
-train_transformer: $(TRANSFORMER_MODEL)
-train_feedforward: $(MLP_MODEL)
+train_cnn: $(CNN_H16_MODEL)
+train_transformer: $(TRANSFORMER_E16_MODEL)
+train_cnns: $(CNN_H16_MODEL) $(CNN_H128_MODEL) $(CNN_E16_MODEL) $(CNN_E128_MODEL)
+train_transformers: $(TRANSFORMER_H16_MODEL) $(TRANSFORMER_H128_MODEL) $(TRANSFORMER_E16_MODEL) $(TRANSFORMER_E128_MODEL)
 
-parse_greengenes: $(PARSED_GREENGENE_FILES)
-parse_moms_pi: $(PARSED_MOMS_PI_FILES)
+process_greengenes: $(PROCESSED_GREENGENES_FILES)
+process_ihmp: $(PROCESSED_IHMP_FILES)
 
-download_greengenes: $(RAW_GREENGENES_DIR)gg_13_5.fasta
-download_moms_pi: $(RAW_MOMS_PI_DIR)moms_pi
+download_greengenes: $(RAW_DIR)/greengenes/gg_13_5.fasta
 
 ##############################################################################
 # Get Mixture Embeddings
@@ -64,7 +81,7 @@ download_moms_pi: $(RAW_MOMS_PI_DIR)moms_pi
 
 mixture_embeddings: src/data/otu_to_mixture_embeddings.py src/data/parse_moms_pi.py
 	$(PYTHON_INTERPRETER) $< \
-		--moms_pi_tables_path 'data/interim/moms_pi/16s_tables.pkl' \
+		--otu_tables_path 'data/interim/moms_pi/16s_tables.pkl' \
 		--id_to_embedding_path 'data/processed/greengenes/mlpencoder_id_to_embedding.pickle' \
 		--model_path 'models/MLPEncoder.pickle' \
 		--sample_data_to_sample_id_path 'data/interim/moms_pi/sample_data_to_sample_id.pickle' \
@@ -74,72 +91,172 @@ mixture_embeddings: src/data/otu_to_mixture_embeddings.py src/data/parse_moms_pi
 # Get OTU Embeddings
 ##############################################################################
 
-# map sequences to feedforward embeddings
-$(PROCESSED_GREENGENES_DIR)mlpencoder_id_to_embedding.pickle: src/models/sequence_to_embeddings.py $(PARSED_GREENGENE_FILES) $(MLP_MODEL)
+$(TRANSFORMER_H16_OTU_EMBEDDINGS): src/embeddings/otu_embeddings.py $(TRANSFORMER_H16_GREENGENES_EMBEDDINGS)
 	$(PYTHON_INTERPRETER) $< \
-		--out $(PROCESSED_GREENGENES_DIR) \
-		--aux_data $(INTERIM_GREENGENES_DIR)/auxillary_data.pickle \
-		--model $(MLP_MODEL)
-	@touch $@
+		--outdir $(OTU_EMBEDDINGS_DIR) \
+		--ihmp_data $(INTERIM_DIR)/ihmp \
+		--greengenes_embeddings $(TRANSFORMER_H16_GREENGENES_EMBEDDINGS)
+	@touch $(TRANSFORMER_H16_OTU_EMBEDDINGS)
+
 
 ##############################################################################
-# Train Models
+# Greengenes Embeddings
 ##############################################################################
 
-# train mlp model
-$(MLP_MODEL): src/models/feedforward/train.py src/models/train.py $(INTERIM_GREENGENES_DIR)sequences_distances.pickle src/models/pair_encoder.py src/visualization/visualize.py # src/models/transformer/model.py src/models/task/dataset.py src/models/hyperbolics.py util/data_handling/data_loader.py util/ml_and_math/loss_functions.py 
+$(TRANSFORMER_H16_GREENGENES_EMBEDDINGS): src/embeddings/greengenes_embeddings.py $(TRANSFORMER_H16_MODEL)
 	$(PYTHON_INTERPRETER) $< \
-		--data=$(INTERIM_GREENGENES_DIR)sequences_distances.pickle \
+		--outdir $(PROCESSED_DIR)/greengenes_embeddings \
+		--model $(TRANSFORMER_H16_MODEL) \
+		--aux_data $(INTERIM_DIR)/greengenes/auxillary_data.pickle
+
+##############################################################################
+# Train CNN
+##############################################################################
+
+$(CNN_H16_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=16 \
+		--distance=hyperbolic --scaling=True  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_H16_MODEL)
+
+$(CNN_H128_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=128 \
+		--distance=hyperbolic --scaling=True  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_H128_MODEL)
+
+$(CNN_E16_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=16 \
+		--distance=euclidean  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_E16_MODEL)
+
+$(CNN_E128_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=128 \
+		--distance=eucldiean  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_E128_MODEL)
+
+
+##############################################################################
+# Train (Global) Transformers
+##############################################################################
+
+$(TRANSFORMER_H16_MODEL): src/models/transformer/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py # src/models/transformer/model.py src/models/task/dataset.py src/models/hyperbolics.py src/util/data_handling/data_loader.py src/util/ml_and_math/loss_functions.py src/visualization/visualize.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+ 		--embedding_size=16 \
+		--distance=hyperbolic --scaling=True \
+		--segment_size=64 --heads=2 --trans_layers=2 --hidden_size=16 --layer_norm=True --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --layer_norm=True --batch_size=128 \
+		--loss=mse \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(TRANSFORMER_H16_MODEL)
+
+$(TRANSFORMER_H128_MODEL): src/models/transformer/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py # src/models/transformer/model.py src/models/task/dataset.py src/models/hyperbolics.py src/util/data_handling/data_loader.py src/util/ml_and_math/loss_functions.py src/visualization/visualize.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=128 \
+		--distance=hyperbolic --scaling=True \
+		--segment_size=64 --heads=2 --trans_layers=2 --hidden_size=16 --layer_norm=True --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --layer_norm=True --batch_size=128 \
+		--loss=mse \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity $(MULTIPLICITY) \
 		--out=$(MODELS_DIR) \
-		--scaling=True --loss=mse --distance=hyperbolic \
-		--batch_norm=True --lr=0.01 --weight_decay=0.00001 \
-		--dropout=0.0 --embedding_size=128 --hidden_size=256 \
-		--layer=3 --print_every=5 --patience=50 --epochs=500 \
-		--batch_size=128 --plot --save
-	@touch $(MLP_MODEL)
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(TRANSFORMER_H128_MODEL)
 
-# train transformer model
-$(TRANSFORMER_MODEL): src/models/transformer/train.py src/models/train.py $(INTERIM_GREENGENES_DIR)sequences_distances.pickle src/models/pair_encoder.py # src/models/transformer/model.py src/models/task/dataset.py src/models/hyperbolics.py util/data_handling/data_loader.py util/ml_and_math/loss_functions.py src/visualization/visualize.py
+$(TRANSFORMER_E16_MODEL): src/models/transformer/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py # src/models/transformer/model.py src/models/task/dataset.py src/models/hyperbolics.py src/util/data_handling/data_loader.py src/util/ml_and_math/loss_functions.py src/visualization/visualize.py
 	$(PYTHON_INTERPRETER) $< \
-		--data=$(INTERIM_GREENGENES_DIR)sequences_distances.pickle \
+		--epochs=$(EPOCHS) \
+		--embedding_size=16 \
+		--distance=euclidean \
+		--segment_size=64 --heads=2 --trans_layers=2 --hidden_size=16 --layer_norm=True --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --layer_norm=True --batch_size=128 \
+		--loss=mse \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity $(MULTIPLICITY) \
 		--out=$(MODELS_DIR) \
-		--scaling=True --loss=mse --distance=hyperbolic \
-		--lr=0.01 --weight_decay=0.0 --layer_norm=True \
-		--dropout=0.0 --embedding_size=128 --hidden_size=256 \
-		--print_every=5 --patience=50 --epochs=500 \
-		--batch_size=128 --plot --save
-	@touch $(TRANSFORMER_MODEL)
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(TRANSFORMER_E16_MODEL)
 
-##############################################################################
-# Parse Data 
-##############################################################################
-
-# parse moms pi
-$(PARSED_MOMS_PI_FILES): src/data/parse_moms_pi.py util/data_handling/data_loader.py
-	$(PYTHON_INTERPRETER) $<
-	@touch $(PARSED_MOMS_PI_FILES)
-
-# parse greengenes
-$(PARSED_GREENGENE_FILES): src/data/parse_fasta.py src/data/edit_distance.py util/alphabets.py util/data_handling/data_loader.py $(RAW_GREENGENES_DIR)gg_13_5.fasta
+$(TRANSFORMER_E128_MODEL): src/models/transformer/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py # src/models/transformer/model.py src/models/task/dataset.py src/models/hyperbolics.py src/util/data_handling/data_loader.py src/util/ml_and_math/loss_functions.py src/visualization/visualize.py
 	$(PYTHON_INTERPRETER) $< \
-		--input $(RAW_GREENGENES_DIR)gg_13_5.fasta \
-		--out $(INTERIM_GREENGENES_DIR) \
+		--epochs=$(EPOCHS) \
+		--embedding_size=128 \
+		--distance=euclidean \
+		--segment_size=64 --heads=2 --trans_layers=2 --hidden_size=16 --layer_norm=True --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --layer_norm=True --batch_size=128 \
+		--loss=mse \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity $(MULTIPLICITY) \
+		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(TRANSFORMER_E128_MODEL)
+
+
+##############################################################################
+# Process Data 
+##############################################################################
+
+# process ihmp datasets
+$(PROCESSED_IHMP_FILES): src/data/process_ihmp.py src/util/data_handling/data_loader.py
+	$(PYTHON_INTERPRETER) $< \
+		--ihmp_dir $(RAW_DIR)/ihmp \
+		--outdir $(INTERIM_DIR)/ihmp
+	@touch $(PROCESSED_IHMP_FILES)
+
+# process greengenes
+$(PROCESSED_GREENGENES_FILES): src/data/process_fasta.py src/data/edit_distance.py src/util/alphabets.py src/util/data_handling/data_loader.py $(RAW_DIR)/greengenes/gg_13_5.fasta
+	$(PYTHON_INTERPRETER) $< \
+		--input $(RAW_DIR)/greengenes/gg_13_5.fasta \
+		--out $(INTERIM_DIR)/greengenes \
 		--alphabet $(ALPHABET) \
 		--train_size $(TRAIN) --val_size $(VAL) --test_size $(TEST)
-	@touch $(PARSED_GREENGENE_FILES)
+	@touch $(PROCESSED_GREENGENES_FILES)
 
 ##############################################################################
 # Download Data
 ##############################################################################
 
 # download greengeens
-$(RAW_GREENGENES_DIR)gg_13_5.fasta: src/data/download_greengenes.sh
-	bash $<
-	@touch $@
-
-# download moms_pi
-# this does not work because the file is not created
-$(RAW_MOMS_PI_DIR)moms_pi: src/data/download_moms_pi.sh
+$(RAW_DIR)/greengenes/gg_13_5.fasta: src/data/download_greengenes.sh
 	bash $<
 	@touch $@
 
@@ -148,7 +265,6 @@ $(RAW_MOMS_PI_DIR)moms_pi: src/data/download_moms_pi.sh
 ##############################################################################
 
 clean:
-	rm -rf data/raw/greengenes
 	rm -rf data/interim/greengenes
 	rm -rf data/processed/greengenes
 	# keep models and figures for now while experimenting because they take a long time to train

@@ -2,8 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from util.distance_functions.distance_functions import DISTANCE_TORCH
+from src.util.distance_functions.distance_functions import DISTANCE_TORCH
 
+from icecream import ic
 
 class PairEmbeddingDistance(nn.Module):
 
@@ -58,6 +59,5 @@ class PairEmbeddingDistance(nn.Module):
 
         if self.scaling is not None:
             distance = distance * self.scaling
-
         return distance
 

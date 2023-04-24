@@ -2,7 +2,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from util.ml_and_math.layers import MLP
+from src.util.ml_and_math.layers import MLP
 
 
 class Transformer(nn.Module):

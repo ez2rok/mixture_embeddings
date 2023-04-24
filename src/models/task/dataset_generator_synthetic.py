@@ -9,8 +9,8 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
-from util.bioinformatics_algorithms.edit_distance import cross_distance_matrix
-from util.data_handling.string_generator import IndependentGenerator, k_mutations
+from src.util.bioinformatics_algorithms.edit_distance import cross_distance_matrix
+from src.util.data_handling.string_generator import IndependentGenerator, k_mutations
 
 
 def generate_batch(args):

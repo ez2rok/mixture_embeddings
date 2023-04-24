@@ -2,7 +2,7 @@
 
 import torch.optim
 
-from util.ml_and_math.poincare import expmap, egrad2rgrad, inner, project, ptransp
+from src.util.ml_and_math.poincare import expmap, egrad2rgrad, inner, project, ptransp
 
 
 def copy_or_set_(dest, source):

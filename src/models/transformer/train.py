@@ -1,6 +1,6 @@
 from src.models.transformer.model import Transformer
 from src.models.train import execute_train, general_arg_parser
-from util.data_handling.data_loader import BOOL_CHOICE
+from src.util.data_handling.data_loader import BOOL_CHOICE
 
 parser = general_arg_parser()
 parser.add_argument('--trans_layers', type=int, default=1, help='Number of attention layers')

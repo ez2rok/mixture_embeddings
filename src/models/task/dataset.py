@@ -1,6 +1,6 @@
 import random
 import torch
-from util.data_handling.data_loader import index_to_one_hot
+from src.util.data_handling.data_loader import index_to_one_hot
 
 
 class EditDistanceDatasetSampled(torch.utils.data.Dataset):
@@ -29,8 +29,10 @@ class EditDistanceDatasetSampled(torch.utils.data.Dataset):
         d = torch.Tensor([0.0])
         while torch.all(d == 0):  # avoid equal sequences that might give numerical problems
             idx2 = random.randint(0, self.batch_size-1)
-            sequences = [self.sequences[index // self.batch_size, index % self.batch_size].unsqueeze(0),
-                     self.sequences[index // self.batch_size, idx2].unsqueeze(0)]
+            sequences = [
+                self.sequences[index // self.batch_size, index % self.batch_size].unsqueeze(0),
+                self.sequences[index // self.batch_size, idx2].unsqueeze(0)
+                ]
             sequences = torch.cat(sequences, dim=0)
             d = self.distances[index // self.batch_size, index % self.batch_size, idx2]
         return sequences, d

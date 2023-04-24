@@ -5,8 +5,8 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
-from util.bioinformatics_algorithms.edit_distance import cross_distance_matrix_threads
-from util.data_handling.string_generator import string_to_list
+from src.util.bioinformatics_algorithms.edit_distance import cross_distance_matrix_threads
+from src.util.data_handling.string_generator import string_to_list
 
 
 class EditDistanceGenomicDatasetGenerator:

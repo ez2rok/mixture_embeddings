@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-from util.ml_and_math.layers import MLP
+from src.util.ml_and_math.layers import MLP
 
 
 class GRU(nn.Module):
