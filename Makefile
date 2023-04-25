@@ -4,7 +4,8 @@
 
 # hyper parameters
 ALPHABET = DNA
-EPOCHS = 200
+# EPOCHS = 150
+EPOCHS = 1
 DISTANCE = hyperbolic
 EMBEDDING_SIZE = 16
 
@@ -14,19 +15,20 @@ MULTIPLICITY = 11
 TRAIN = 7000 # 7000 * multiplicity samples
 VAL = 100 # 100 * 100 samples
 TEST = 150 # 150 * 150 samples
+REF = 50000
+QUERY = 500
 
 # directory names
 RAW_DIR = data/raw
 INTERIM_DIR = data/interim
 PROCESSED_DIR = data/processed
-MODELS_DIR = models
+MODELS_DIR = models2
 GREENGENES_EMBEDDINGS_DIR = data/processed/greengenes_embeddings
 OTU_EMBEDDINGS_DIR = data/processed/otu_embeddings
 PROCESSED_GREENGENES_DIR = data/processed/greengenes
 
 # file names
-PROCESSED_GREENGENES_FILES = $(INTERIM_DIR)/greengenes/sequences_distances.pickle \
-						 $(INTERIM_DIR)/greengenes/auxillary_data.pickle
+PROCESSED_GREENGENES_FILES = $(INTERIM_DIR)/greengenes/sequences_distances.pickle $(INTERIM_DIR)/greengenes/closest_strings.pickle $(INTERIM_DIR)/greengenes/auxillary_data.pickle
 PROCESSED_IHMP_FILES = $(INTERIM_DIR)/ihmp/ibd_data.pickle \
 					   $(INTERIM_DIR)/ihmp/ibd_metadata.pickle \
 					   $(INTERIM_DIR)/ihmp/t2d_data.pickle \
@@ -34,15 +36,15 @@ PROCESSED_IHMP_FILES = $(INTERIM_DIR)/ihmp/ibd_data.pickle \
 					   $(INTERIM_DIR)/ihmp/moms_data.pickle \
 					   $(INTERIM_DIR)/ihmp/moms_metadata.pickle
 
-TRANSFORMER_H16_MODEL = models/transformer_hyperbolic_16_model.pickle 
-TRANSFORMER_E16_MODEL = models/transformer_euclidean_16_model.pickle
-TRANSFORMER_H128_MODEL = models/transformer_hyperbolic_128_model.pickle
-TRANSFORMER_E128_MODEL = models/transformer_euclidean_128_model.pickle
+TRANSFORMER_H16_MODEL = $(MODELS_DIR)/transformer_hyperbolic_16_model.pickle 
+TRANSFORMER_E16_MODEL = $(MODELS_DIR)/transformer_euclidean_16_model.pickle
+TRANSFORMER_H128_MODEL = $(MODELS_DIR)/transformer_hyperbolic_128_model.pickle
+TRANSFORMER_E128_MODEL = $(MODELS_DIR)/transformer_euclidean_128_model.pickle
 
-CNN_H16_MODEL = models/cnn_hyperbolic_16_model.pickle
-CNN_E16_MODEL = models/cnn_euclidean_16_model.pickle
-CNN_H128_MODEL = models/cnn_hyperbolic_128_model.pickle
-CNN_E128_MODEL = models/cnn_euclidean_128_model.pickle
+CNN_H16_MODEL = $(MODELS_DIR)/cnn_hyperbolic_16_model.pickle
+CNN_E16_MODEL = $(MODELS_DIR)/cnn_euclidean_16_model.pickle
+CNN_H128_MODEL = $(MODELS_DIR)/cnn_hyperbolic_128_model.pickle
+CNN_E128_MODEL = $(MODELS_DIR)/cnn_euclidean_128_model.pickle
 
 TRANSFORMER_H16_GREENGENES_EMBEDDINGS = $(GREENGENES_EMBEDDINGS_DIR)/transformer_hyperbolic_16_greengenes_embeddings.pickle
 TRANSFORMER_H16_OTU_EMBEDDINGS = $(OTU_EMBEDDINGS_DIR)/transformer_hyperbolic_16_otu_embeddings.pickle
@@ -242,13 +244,16 @@ $(PROCESSED_IHMP_FILES): src/data/process_ihmp.py src/util/data_handling/data_lo
 		--outdir $(INTERIM_DIR)/ihmp
 	@touch $(PROCESSED_IHMP_FILES)
 
-# process greengenes
-$(PROCESSED_GREENGENES_FILES): src/data/process_fasta.py src/data/edit_distance.py src/util/alphabets.py src/util/data_handling/data_loader.py $(RAW_DIR)/greengenes/gg_13_5.fasta
+
+# process greengenes fasta for traning models on edit distance 
+$(PROCESSED_GREENGENES_FILES): src/data/process_fasta.py src/data/edit_distance.py src/util/data_handling/data_loader.py $(RAW_DIR)/greengenes/gg_13_5.fasta
 	$(PYTHON_INTERPRETER) $< \
-		--input $(RAW_DIR)/greengenes/gg_13_5.fasta \
+		--source_sequences $(RAW_DIR)/greengenes/gg_13_5.fasta \
 		--out $(INTERIM_DIR)/greengenes \
 		--alphabet $(ALPHABET) \
-		--train_size $(TRAIN) --val_size $(VAL) --test_size $(TEST)
+		--train_size $(TRAIN) --val_size $(VAL) --test_size $(TEST) \
+		--ref_size $(REF) --query_size $(QUERY) \
+		--compute_eda False --compute_csr False
 	@touch $(PROCESSED_GREENGENES_FILES)
 
 ##############################################################################
