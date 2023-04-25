@@ -1,4 +1,6 @@
 import random
+import string
+
 
 DNA_ALPHABET = {
     'A': 0,
@@ -12,9 +14,19 @@ PROTEIN_ALPHABET = {
     'N': 11, 'P': 12, 'Q': 13, 'R': 14, 'S': 15, 'T': 16, 'V': 17, 'W': 18, 'Y': 19
 }
 
+ENGLISH_ALPHABET = {char: ord(char) - ord('A') for char in string.ascii_uppercase}
 
-def string_to_list(s, length=None, alphabet=DNA_ALPHABET):
-    L = [alphabet[s[i]] if i<len(s) else -1
+# More info about IUPAC Alphabet here: https://www.cottongen.org/help/nomenclature/IUPAC_nt
+IUPAC_ALPHABET = {
+    'A': 0, 'B': 1, 'C': 2, 'D': 3, 'G': 4, 'H': 5, 'K': 6, 'M': 7, 'N': 8, 'R': 9, 'S': 10, 
+    'T': 11, 'V': 12, 'W': 13, 'Y': 14
+}
+
+ALPHABETS = {'DNA': DNA_ALPHABET, 'IUPAC': IUPAC_ALPHABET, 'PROTEIN': PROTEIN_ALPHABET, 'ENGLISH': ENGLISH_ALPHABET}
+
+
+def str_seq_to_num_seq(s, length=None, alphabet=DNA_ALPHABET):
+    L = [alphabet[s[i]] if (i<len(s) and s[i] in alphabet) else -1
          for i in range(length if length is not None else len(s))]
     return L
 
