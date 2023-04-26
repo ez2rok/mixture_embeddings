@@ -35,6 +35,6 @@ def index_to_one_hot(x, alphabet_size=4, device='cpu'):
 def dataset_to_one_hot(dic, alphabet_size=4):
     for dset in dic.keys():
         dic[dset] = index_to_one_hot(dic[dset], alphabet_size=alphabet_size)
-
+    
 
 BOOL_CHOICE = ['True', 'False']
