@@ -84,7 +84,7 @@ def execute_train(model_class, model_args, args):
     embedding_model = model_class(**vars(model_args))
     model = PairEmbeddingDistance(embedding_model=embedding_model, distance=args.distance, scaling=args.scaling)
     model.to(device)
-            
+                
     # select optimizer
     if args.distance == 'hyperbolic' and args.hyp_optimizer == 'RAdam':
         optimizer = RAdam(model.parameters(), lr=args.lr)
@@ -92,13 +92,13 @@ def execute_train(model_class, model_args, args):
         optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
     # select loss
-    loss = None
-    if args.loss == "mse":
-        loss = nn.MSELoss()
-    elif args.loss == "mae":
-        loss = nn.L1Loss()
-    elif args.loss == "mape":
-        loss = MAPE
+    
+    loss_str_to_loss = {
+        'mse': nn.MSELoss(),
+        'mae': nn.L1Loss(),
+        'mape': MAPE
+    }
+    loss = loss_str_to_loss[args.loss]
 
     # print total number of parameters
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -114,7 +114,7 @@ def execute_train(model_class, model_args, args):
     if args.use_wandb:
         wandb.login()
         run = wandb.init(
-            project='Greengenes Embeddings',
+            project='Greengenes Embeddings for ANNS',
             name='{}_{}_{}'.format(model_class.__name__.lower(), args.distance, args.embedding_size),
             config={
                 'model': model_class.__name__.lower(),
@@ -200,6 +200,12 @@ def execute_train(model_class, model_args, args):
             mse = avg_loss[0]
             percent_rmse = 100 * np.sqrt(mse)
             wandb.log({'final/loss_{}'.format(dset): avg_loss[0], 'final/mape_{}'.format(dset): avg_loss[1], 'final/%rmse_{}'.format(dset): percent_rmse})
+            
+    if args.use_wandb:
+        wandb.log({
+            'final/radius': None if model.radius is None else model.radius.item(),
+            'final/scaling': None if model.scaling is None else model.scaling.item()
+            })
 
     # save model
     if args.save:
