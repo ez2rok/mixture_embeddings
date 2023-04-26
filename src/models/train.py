@@ -77,8 +77,8 @@ def execute_train(model_class, model_args, args):
     model_args.len_sequence = datasets['train'].len_sequence
     model_args.embedding_size = args.embedding_size
     model_args.dropout = args.dropout
-    print("Length of sequence", datasets['train'].len_sequence)
     args.scaling = True if args.scaling == 'True' else False
+    print("Length of sequence", datasets['train'].len_sequence)
 
     # generate model
     embedding_model = model_class(**vars(model_args))
@@ -199,17 +199,13 @@ def execute_train(model_class, model_args, args):
             # compute %rmse (they use this metric in the NeuroSEED paper)
             mse = avg_loss[0]
             percent_rmse = 100 * np.sqrt(mse)
-            
             wandb.log({'final/loss_{}'.format(dset): avg_loss[0], 'final/mape_{}'.format(dset): avg_loss[1], 'final/%rmse_{}'.format(dset): percent_rmse})
 
     # save model
     if args.save:
         filename = '{}/{}_{}_{}_model.pickle'.format(args.out, model_class.__name__.lower(), args.distance, args.embedding_size)
-        radius = model.state_dict()['radius'] if 'radius' in model.state_dict() else -1.
-        scaling = model.state_dict()['scaling'] if 'scaling' in model.state_dict() else -1
-        data = (model_class, model_args, model.embedding_model.state_dict(), args.distance, radius, scaling)
-        torch.save(data, filename)
-
+        torch.save((model, model.state_dict()), filename)
+        
 def load_edit_distance_dataset(path, multiplicity=10):
     with open(path, 'rb') as f:
         sequences, distances = pickle.load(f)
