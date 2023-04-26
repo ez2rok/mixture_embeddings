@@ -4,10 +4,7 @@
 
 # hyper parameters
 ALPHABET = DNA
-# EPOCHS = 150
-EPOCHS = 1
-DISTANCE = hyperbolic
-EMBEDDING_SIZE = 16
+EPOCHS = 100
 
 # number of greengene sequences to use for train, val test split of data
 # values ensure a roughly 80% train, 10% val, 10% test split
@@ -41,6 +38,15 @@ TRANSFORMER_E16_MODEL = $(MODELS_DIR)/transformer_euclidean_16_model.pickle
 TRANSFORMER_H128_MODEL = $(MODELS_DIR)/transformer_hyperbolic_128_model.pickle
 TRANSFORMER_E128_MODEL = $(MODELS_DIR)/transformer_euclidean_128_model.pickle
 
+CNN_H2_MODEL = $(MODELS_DIR)/cnn_hyperbolic_2_model.pickle
+CNN_H4_MODEL = $(MODELS_DIR)/cnn_hyperbolic_4_model.pickle
+CNN_H6_MODEL = $(MODELS_DIR)/cnn_hyperbolic_6_model.pickle
+CNN_H8_MODEL = $(MODELS_DIR)/cnn_hyperbolic_8_model.pickle
+CNN_E2_MODEL = $(MODELS_DIR)/cnn_euclidean_2_model.pickle
+CNN_E4_MODEL = $(MODELS_DIR)/cnn_euclidean_4_model.pickle
+CNN_E6_MODEL = $(MODELS_DIR)/cnn_euclidean_6_model.pickle
+CNN_E8_MODEL = $(MODELS_DIR)/cnn_euclidean_8_model.pickle
+
 CNN_H16_MODEL = $(MODELS_DIR)/cnn_hyperbolic_16_model.pickle
 CNN_E16_MODEL = $(MODELS_DIR)/cnn_euclidean_16_model.pickle
 CNN_H128_MODEL = $(MODELS_DIR)/cnn_hyperbolic_128_model.pickle
@@ -69,7 +75,8 @@ greengenes_embeddings: $(TRANSFORMER_H16_GREENGENES_EMBEDDINGS)
 
 train_cnn: $(CNN_H16_MODEL)
 train_transformer: $(TRANSFORMER_E16_MODEL)
-train_cnns: $(CNN_H16_MODEL) $(CNN_H128_MODEL) $(CNN_E16_MODEL) $(CNN_E128_MODEL)
+# train_cnns: $(CNN_H16_MODEL) $(CNN_H128_MODEL) $(CNN_E16_MODEL) $(CNN_E128_MODEL)
+train_cnns: $(CNN_E2_MODEL) $(CNN_E4_MODEL) $(CNN_E6_MODEL) $(CNN_E8_MODEL) $(CNN_H2_MODEL) $(CNN_H4_MODEL) $(CNN_H6_MODEL) $(CNN_H8_MODEL)
 train_transformers: $(TRANSFORMER_H16_MODEL) $(TRANSFORMER_H128_MODEL) $(TRANSFORMER_E16_MODEL) $(TRANSFORMER_E128_MODEL)
 
 process_greengenes: $(PROCESSED_GREENGENES_FILES)
@@ -115,6 +122,62 @@ $(TRANSFORMER_H16_GREENGENES_EMBEDDINGS): src/embeddings/greengenes_embeddings.p
 # Train CNN
 ##############################################################################
 
+$(CNN_H2_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=2 \
+		--distance=hyperbolic --scaling=True  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_H2_MODEL)
+
+$(CNN_H4_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=4 \
+		--distance=hyperbolic --scaling=True  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_H4_MODEL)
+
+$(CNN_H6_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=6 \
+		--distance=hyperbolic --scaling=True  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_H6_MODEL)
+
+$(CNN_H8_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=8 \
+		--distance=hyperbolic --scaling=True  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_H8_MODEL)
+
 $(CNN_H16_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
 	$(PYTHON_INTERPRETER) $< \
 		--epochs=$(EPOCHS) \
@@ -142,6 +205,62 @@ $(CNN_H128_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/gr
 		--print_every=5 --patience=50 \
 		--plot --save --use_wandb
 	@touch $(CNN_H128_MODEL)
+
+$(CNN_E2_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=2 \
+		--distance=euclidean  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_E2_MODEL)
+
+$(CNN_E4_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=4 \
+		--distance=euclidean  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_E4_MODEL)
+
+$(CNN_E6_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=6 \
+		--distance=euclidean  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_E6_MODEL)
+
+$(CNN_E8_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
+	$(PYTHON_INTERPRETER) $< \
+		--epochs=$(EPOCHS) \
+		--embedding_size=8 \
+		--distance=euclidean  \
+		--loss=mse \
+		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
+		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
+		--data=$(INTERIM_DIR)/greengenes/sequences_distances.pickle --multiplicity=$(MULTIPLICITY) \
+ 		--out=$(MODELS_DIR) \
+		--print_every=5 --patience=50 \
+		--plot --save --use_wandb
+	@touch $(CNN_E8_MODEL)
 
 $(CNN_E16_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/greengenes/sequences_distances.pickle src/models/pair_encoder.py
 	$(PYTHON_INTERPRETER) $< \
