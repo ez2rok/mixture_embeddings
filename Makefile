@@ -75,8 +75,8 @@ greengenes_embeddings: $(TRANSFORMER_H16_GREENGENES_EMBEDDINGS)
 
 train_cnn: $(CNN_H16_MODEL)
 train_transformer: $(TRANSFORMER_E16_MODEL)
-# train_cnns: $(CNN_H16_MODEL) $(CNN_H128_MODEL) $(CNN_E16_MODEL) $(CNN_E128_MODEL)
-train_cnns: $(CNN_E2_MODEL) $(CNN_E4_MODEL) $(CNN_E6_MODEL) $(CNN_E8_MODEL) $(CNN_H2_MODEL) $(CNN_H4_MODEL) $(CNN_H6_MODEL) $(CNN_H8_MODEL)
+train_cnns: $(CNN_H16_MODEL) $(CNN_H128_MODEL) $(CNN_E16_MODEL) $(CNN_E128_MODEL)
+# train_cnns: $(CNN_E2_MODEL) $(CNN_E4_MODEL) $(CNN_E6_MODEL) $(CNN_E8_MODEL) $(CNN_H2_MODEL) $(CNN_H4_MODEL) $(CNN_H6_MODEL) $(CNN_H8_MODEL)
 train_transformers: $(TRANSFORMER_H16_MODEL) $(TRANSFORMER_H128_MODEL) $(TRANSFORMER_E16_MODEL) $(TRANSFORMER_E128_MODEL)
 
 process_greengenes: $(PROCESSED_GREENGENES_FILES)
@@ -280,7 +280,7 @@ $(CNN_E128_MODEL): src/models/cnn/train.py src/models/train.py $(INTERIM_DIR)/gr
 	$(PYTHON_INTERPRETER) $< \
 		--epochs=$(EPOCHS) \
 		--embedding_size=128 \
-		--distance=eucldiean  \
+		--distance=euclidean  \
 		--loss=mse \
 		--batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1 \
 		--lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size=128 \
