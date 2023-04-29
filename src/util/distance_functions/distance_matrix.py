@@ -38,7 +38,8 @@ def hyperbolic_matrix(enc_reference, enc_query, scaling=None):
         d[:, j] = hyperbolic_distance(enc_reference, enc_query[j:j+1].repeat(N, 1))
 
     if scaling is not None:
-        d = d.detach().cpu() * scaling.detach().cpu()
+        # d = d.detach().cpu() * scaling.detach().cpu()
+        d = d * scaling
     return d
 
 
