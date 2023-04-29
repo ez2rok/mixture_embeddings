@@ -8,6 +8,7 @@ import argparse
 import torch
 import numpy as np
 from icecream import ic
+from tqdm import tqdm
 
 # local files
 from src.util.data_handling.data_loader import save_as_pickle
@@ -80,7 +81,7 @@ def closest_string_retrieval_data(split_to_str_seqs, n_thread, alphabet, length)
     n_queries = len(split_to_str_seqs['query'])
 
     # convert string sequence to numerical sequence
-    references = [str_seq_to_num_seq(s, length=length, alphabet=alphabet) for s in str_references]
+    references = [str_seq_to_num_seq(s, length=length, alphabet=alphabet) for s in tqdm(str_references, desc='Reference String to Numbers')]
     queries = [str_seq_to_num_seq(s, length=length, alphabet=alphabet) for s in str_queries]
 
     # compute distances and find reference with minimum distance
@@ -103,30 +104,39 @@ def closest_string_retrieval_data(split_to_str_seqs, n_thread, alphabet, length)
 
 def main(split_to_size, source_sequences, alphabet_str, n_thread, outdir, compute_eda=True, compute_csr=True):
 
-    print(compute_eda, compute_csr)
-    # initial values
-    filenames = ['{}/{}.pickle'.format(outdir, suffix) for suffix in ['auxillary_data', 'sequences_distances', 'closest_strings']]
+    filenames = []
     
-    # load data, split data, save data
+    # load, split, and save data
     print('-'*5, 'Load FASTA file', '-'*5)
     id_to_str_seq, length = load_fasta(source_sequences)
     split_to_ids = split_ids(id_to_str_seq, split_to_size)
-    save_as_pickle((id_to_str_seq, split_to_ids, alphabet_str, length), filenames[0])
+    
+    filename = '{}/auxillary_data.pickle'.format(outdir)
+    filenames.append(filename)
+    save_as_pickle((id_to_str_seq, split_to_ids, alphabet_str, length), filename)
     
     # seperate data by task: edit distance approximation (eda) and closest string retrival (csr)
     eda_split_to_str_seqs = {split: [id_to_str_seq[_id] for _id in split_to_ids[split]] for split in ['train', 'val', 'test']}
     csr_split_to_str_seqs = {split: [id_to_str_seq[_id] for _id in split_to_ids[split]] for split in ['ref', 'query']}
     alphabet = ALPHABETS[alphabet_str]
 
-    # compute edit distance approximation (eda) data and closest string retrival (csr) data
+    # compute edit distance approximation (eda) data
     if compute_eda:
         print('-'*5, 'Compute edit distance approximation data', '-'*5)
         sequences, distances = edit_distance_approximation_data(eda_split_to_str_seqs, n_thread, alphabet, length)
-        # save_as_pickle((sequences, distances), filenames[1])
+        
+        filename = '{}/sequences_distances.pickle'.format(outdir)
+        filenames.append(filename)
+        save_as_pickle((sequences, distances), filename)
+        
+    # compute closest string retrival (csr) data
     if compute_csr:
         print('-'*5, 'Compute closest string retrival data', '-'*5)
         references, queries, labels = closest_string_retrieval_data(csr_split_to_str_seqs, n_thread, alphabet, length)
-        # save_as_pickle((references, queries, labels), filenames[2])
+        
+        filename = '{}/closest_strings_ref{}_query{}.pickle'.format(outdir, split_to_size['ref'], split_to_size['query'])
+        filenames.append(filename)
+        save_as_pickle((references, queries, labels), filename)
     
     return filenames
 
@@ -135,12 +145,12 @@ if __name__ == '__main__' :
     parser.add_argument('--train_size', type=int, default=7000, help='Number of training sequences for edit distance approximation.')
     parser.add_argument('--val_size', type=int, default=100, help='Number of validation sequences for edit distance approximation.')
     parser.add_argument('--test_size', type=int, default=150, help='Number of test sequences for edit distance approximation.')
-    parser.add_argument('--ref_size', type=int, default=50, help='Number of reference strings for closest string retrival.')
-    parser.add_argument('--query_size', type=int, default=50000, help='Number of query strings for closest string retrival.')
+    parser.add_argument('--ref_size', type=int, default=1000000, help='Number of reference strings for closest string retrival.')
+    parser.add_argument('--query_size', type=int, default=1000, help='Number of query strings for closest string retrival.')
     parser.add_argument('--alphabet_str', type=str, default='DNA', help="Alphabet of genetic sequence. Chose from ['DNA', 'PROTEIN', 'IUPAC', or 'ENGLISH].")
     parser.add_argument('--outdir', type=str, default='data/interim/greengenes/', help='Output data path')
     parser.add_argument('--source_sequences', type=str, default='data/raw/greengenes/gg_13_5.fasta', help='Path to the greengenes sequences. Must be FASTA file.')
-    parser.add_argument('--n_thread', type=int, default=5, help='Number of threads for parallel compute.')
+    parser.add_argument('--n_thread', type=int, default=20, help='Number of threads for parallel compute.')
     parser.add_argument('--compute_eda', type=str, default='True', help='If true, compute edit distance approximation (eda) data.')
     parser.add_argument('--compute_csr', type=str, default='True', help='If true, compute closest string retrival data.')
     args = parser.parse_args()
@@ -149,4 +159,3 @@ if __name__ == '__main__' :
     args.compute_eda = True if args.compute_eda == 'True' else False
     args.compute_csr = True if args.compute_csr == 'True' else False
     filenames = main(split_to_size, args.source_sequences, args.alphabet_str, args.n_thread, args.outdir, compute_eda=args.compute_eda, compute_csr=args.compute_csr)
-
