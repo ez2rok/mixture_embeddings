@@ -35,8 +35,8 @@ batch_size = 128
 model_class = 'cnn'
 model_dir = 'models'
 distance_strs = ['hyperbolic', 'euclidean']
-embedding_sizes = [16, 128]
-seeds = [43, 44]
+embedding_sizes = [2, 4, 6, 8, 16, 32, 64, 128]
+seeds = [43, 44, 45, 46]
 
 def train_all():
     """train models with various distance functions, embedding sizes, and seed."""
@@ -46,6 +46,13 @@ def train_all():
         scaling = True if distance_str == 'hyperbolic' else False
         for embedding_size in embedding_sizes:
             for seed in seeds:
+                
+                # set random seed
+                np.random.seed(seed)
+                torch.manual_seed(seed)
+                gs.random.seed(seed)
+                if device == 'cuda':
+                    torch.cuda.manual_seed(seed)
             
                 # filepaths
                 model_name = '{}_{}_{}_{}'.format(model_class, distance_str, embedding_size, seed)
@@ -53,9 +60,10 @@ def train_all():
                 
                 # define command
                 train_cmd = 'python src/models/{}/train.py'.format(model_class) \
-                    + ' --epochs={}'.format(epochs) \
                     + ' --embedding_size={}'.format(embedding_size) \
                     + ' --distance={} --scaling={}'.format(distance_str, scaling) \
+                    + ' --seed={}'.format(seed) \
+                    + ' --epochs={}'.format(epochs) \
                     + ' --loss=mse' \
                     + ' --batch_norm=True --channels=32 --kernel_size=5 --pooling=avg --non_linearity=True --layers=4 --readout_layers=1' \
                     + ' --lr=0.001 --weight_decay=0.0 --dropout=0.0 --batch_size={}'.format(batch_size) \
@@ -107,4 +115,4 @@ def get_embeddings():
                     
 if __name__ == '__main__':
     train_all()
-    get_embeddings()
+    # get_embeddings()
