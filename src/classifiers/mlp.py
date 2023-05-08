@@ -25,13 +25,20 @@ class MLPModel(ComposerModel):
         self.num_classes = num_classes
         
         # define model
-        self.model = nn.Sequential(OrderedDict([
-            ('input', nn.Linear(embedding_size, h1)),
-            ('sig1', nn.Sigmoid()),
-            ('hidden', nn.Linear(h1, h2)),
-            ('sig2', nn.Sigmoid()),
-            ('output', nn.Linear(h2, self.num_classes))
-        ]))
+        if h2 is None:
+            self.model = nn.Sequential(OrderedDict([
+                ('input', nn.Linear(embedding_size, h1)),
+                ('sig1', nn.Sigmoid()),
+                ('output', nn.Linear(h1, self.num_classes))
+            ]))
+        else:
+            self.model = nn.Sequential(OrderedDict([
+                ('input', nn.Linear(embedding_size, h1)),
+                ('sig1', nn.Sigmoid()),
+                ('hidden', nn.Linear(h1, h2)),
+                ('sig2', nn.Sigmoid()),
+                ('output', nn.Linear(h2, self.num_classes))
+            ]))
         
         # Metrics for training
         self.train_metrics =  MetricCollection([
@@ -78,13 +85,14 @@ class MLPModel(ComposerModel):
 
 class MLP:
     
-    def __init__(self, batch_size=64, duration='100ep', h1=64, h2=32, seed=42):
+    def __init__(self, batch_size=64, duration='100ep', h1=32, h2=16, lr=0.001, seed=42):
         self.num_classes = -1
         self.batch_size = batch_size
         self.duration = duration
         self.h1 = h1
         self.h2 = h2
         self.seed = seed
+        self.lr = lr
         
         self.trainer = None
         self.model = None
@@ -106,19 +114,32 @@ class MLP:
         self.model = model
         
         # logger
-        wandb_logger = WandBLogger(project='IBD Classifier')
+        n_samples = len(X_train)
+        wandb_logger = WandBLogger(
+            project='IBD Classifier',
+            init_kwargs = {
+                'config': {
+                    'seed': self.seed,
+                    'epochs': self.duration,
+                    'learning_rate': self.lr,
+                    'batch_size': self.batch_size,
+                    'hidden 1': self.h1,
+                    'hidden 2': self.h2
+                    }
+                }
+            )
 
         # trainer
         trainer = Trainer(
             model=model,
             train_dataloader=train_dataloader,
-            optimizers=torch.optim.Adam(model.parameters(), lr=0.01),
+            optimizers=torch.optim.Adam(model.parameters(), lr=self.lr),
             max_duration=self.duration,
             device='gpu',
             progress_bar=False,
             load_progress_bar=False,
             seed=self.seed,
-            
+            loggers=[wandb_logger]
         )
         self.trainer = trainer
         
@@ -134,6 +155,9 @@ class MLP:
         eval_dataset = torch.utils.data.TensorDataset(torch.from_numpy(X_test.astype(np.float32)), 
                                                       torch.from_numpy(y_test.astype(np.float32)))       
         eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=self.batch_size, shuffle=False)
+        
+        # run eval (mainly so the metrics show up in wandb)
+        self.trainer.eval(eval_dataloader)
         
         # run predict
         y_pred = self.trainer.predict(eval_dataloader)
