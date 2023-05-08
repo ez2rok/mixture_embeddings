@@ -55,6 +55,8 @@ def embed_strings(loader, model, device, desc='Embedding sequences'):
     embeddings = []
 
     for sequences in tqdm(loader, desc=desc):
+        if isinstance(sequences, list): # query dataloader iterates over (sequences, label); so here sequnces is a list and must remove label
+            sequences = sequences[0]
         sequences = sequences.to(device)
         embedded = model.encode(sequences)
         embeddings.append(embedded.cpu().detach())
@@ -138,14 +140,14 @@ def get_mixture_embeddings(data, otu_embeddings, distance_str):
         if distance_str == 'hyperbolic':
             mixture_embedding = fmean.fit(otu_embeddings, weights=weights[i]).estimate_  
         else:
-            mixture_embedding = np.average(otu_embeddings, weights=weights.iloc[i])
+            mixture_embedding = np.average(otu_embeddings, weights=weights[i], axis=0)
         mixture_embeddings.append(mixture_embedding)
         
     mixture_embeddings = np.array(mixture_embeddings)
     return mixture_embeddings
 
 
-def get_embeddings(auxillary_data_path, encoder_path, ihmp_data, outdir, batch_size, no_cuda, seed=42, save=True):
+def get_embeddings(encoder_path, ihmp_data, outdir, batch_size, no_cuda, auxillary_data_path='data/interim/greengenes/auxillary_data.pickle', seed=42, save=True):
     """Get mixture embeddings for all data"""
     
     model_name = '_'.join(encoder_path.split('/')[-1].split('_')[:-1])
@@ -183,4 +185,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     args.no_cuda = True if args.no_cuda == 'True' else False
-    get_embeddings(args.auxillary_data_path, args.encoder_path, args.ihmp_data, args.outdir, args.batch_size, args.no_cuda, seed=args.seed, save=args.save)
+    get_embeddings(args.encoder_path, args.ihmp_data, args.outdir, args.batch_size, args.no_cuda, auxillary_data_path=args.auxillary_data_path, seed=args.seed, save=args.save)
