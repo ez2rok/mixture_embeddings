@@ -38,12 +38,22 @@ distance_strs = ['hyperbolic', 'euclidean']
 embedding_sizes = [2, 4, 6, 8, 16, 32, 64, 128]
 seeds = [43, 44, 45, 46]
 
+embedding_size_to_epochs = {
+    2: 100,
+    4: 100,
+    6: 200,
+    8: 300,
+    16: 400,
+    32: 500,
+    64: 500,
+    128: 500
+}
+
 def train_all():
     """train models with various distance functions, embedding sizes, and seed."""
 
     # train models
     for distance_str in distance_strs:
-        scaling = True if distance_str == 'hyperbolic' else False
         for embedding_size in embedding_sizes:
             for seed in seeds:
                 
@@ -53,6 +63,10 @@ def train_all():
                 gs.random.seed(seed)
                 if device == 'cuda':
                     torch.cuda.manual_seed(seed)
+                    
+                # get values
+                scaling = True if distance_str == 'hyperbolic' else False
+                epochs = embedding_size_to_epochs[embedding_size]
             
                 # filepaths
                 model_name = '{}_{}_{}_{}'.format(model_class, distance_str, embedding_size, seed)
