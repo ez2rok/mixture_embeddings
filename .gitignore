@@ -1,5 +1,5 @@
 # exclude wandb logs
-/wandb
+wandb/
 
 # exclude data, models, notebooks by default
 /data/
