@@ -92,14 +92,13 @@ def execute_train(model_class, model_args, args):
         optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
     # select loss
-    
     loss_str_to_loss = {
         'mse': nn.MSELoss(),
         'mae': nn.L1Loss(),
         'mape': MAPE
     }
     loss = loss_str_to_loss[args.loss]
-
+    
     # print total number of parameters
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print('Total params', total_params)
@@ -114,7 +113,7 @@ def execute_train(model_class, model_args, args):
     if args.use_wandb:
         wandb.login()
         run = wandb.init(
-            project='Greengenes Embeddings for ANNS',
+            project='Greengenes Embeddings',
             name='{}_{}_{}'.format(model_class.__name__.lower(), args.distance, args.embedding_size),
             config={
                 'model': model_class.__name__.lower(),
@@ -209,7 +208,7 @@ def execute_train(model_class, model_args, args):
 
     # save model
     if args.save:
-        filename = '{}/{}_{}_{}_model.pickle'.format(args.out, model_class.__name__.lower(), args.distance, args.embedding_size)
+        filename = '{}/{}_{}_{}_{}_model.pickle'.format(args.out, model_class.__name__.lower(), args.distance, args.embedding_size, args.seed)
         torch.save((model, model.state_dict()), filename)
         
 def load_edit_distance_dataset(path, multiplicity=10):
