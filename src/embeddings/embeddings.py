@@ -132,7 +132,7 @@ def get_mixture_embeddings(data, otu_embeddings, distance_str):
     # initialize frechet mean
     embedding_size = otu_embeddings.shape[1]
     hyperbolic = Hyperbolic(dim=embedding_size, default_coords_type='ball')
-    fmean = FrechetMean(hyperbolic.metric, max_iter=100)
+    fmean = FrechetMean(hyperbolic.metric, max_iter=1000, method='adaptive')
         
     for i in tqdm(range(len(data)), desc='Mixture Embeddings'):
         
@@ -160,16 +160,16 @@ def get_embeddings(encoder_path, ihmp_data, outdir, batch_size, no_cuda, auxilla
 
     print('\n' + '-'*5 + 'Compute {} Embeddings'.format(ihmp_name) + '-'*5)
     otu_embeddings = get_otu_embeddings(otu_ids, encoder_path, batch_size, seed=seed, no_cuda=no_cuda, auxillary_data_path=auxillary_data_path)
-    mixture_embeddings = get_mixture_embeddings(data, otu_embeddings, distance_str)
-    
     if save:
         otu_filename = '{}/otu_embeddings/{}/{}_otu_embeddings.pickle'.format(outdir, ihmp_name, model_name)
-        mixture_filename = '{}/mixture_embeddings/{}/{}_mixture_embeddings.pickle'.format(outdir, ihmp_name, model_name)
-
         save_as_pickle(otu_embeddings, otu_filename)
+    
+    mixture_embeddings = get_mixture_embeddings(data, otu_embeddings, distance_str)
+    if save:
+        mixture_filename = '{}/mixture_embeddings/{}/{}_mixture_embeddings.pickle'.format(outdir, ihmp_name, model_name)
         save_as_pickle(mixture_embeddings, mixture_filename)
-            
-    return otu_filename, mixture_filename
+    
+    return otu_embeddings, mixture_embeddings
 
 if __name__ == '__main__':
     
