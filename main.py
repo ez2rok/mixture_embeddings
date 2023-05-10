@@ -30,14 +30,16 @@ processed_dir = 'data/processed'
 ihmp_dir = 'data/interim/ihmp'
 auxillary_data_path = 'data/interim/greengenes/auxillary_data.pickle'
 sequences_distances_data_path = 'data/interim/greengenes/sequences_distances.pickle'
-ihmp_names = ['ibd', 't2d', 'moms']
-ihmp_paths= ['{}/{}_data.pickle'.format(ihmp_dir, ihmp_name) for ihmp_name in ihmp_names]
+model_dir = 'models'
+
+# ihmp_names = ['ibd', 't2d', 'moms']
+ihmp_names = ['ibd']
+ihmp_data_paths= ['{}/{}_data.csv'.format(ihmp_dir, ihmp_name) for ihmp_name in ihmp_names]
         
 # model parameters
 epochs = 100
 batch_size = 128
 model_class = 'cnn'
-model_dir = 'models'
 distance_strs = ['hyperbolic', 'euclidean']
 embedding_sizes = [2, 4, 6, 8, 16, 32, 64, 128]
 seeds = [43, 44, 45, 46]
@@ -104,7 +106,8 @@ def train_all():
                 epochs = embedding_size_to_epochs[embedding_size]
             
                 # filepaths
-                model_name = '{}_{}_{}_{}'.format(model_class, distance_str, embedding_size, seed)
+                # model_name = '{}_{}_{}_{}'.format(model_class, distance_str, embedding_size, seed)
+                model_name = '{}_{}_{}'.format(model_class, distance_str, embedding_size)
                 encoder_path = '{}/{}_model.pickle'.format(model_dir, model_name)
                 
                 # define command
@@ -123,6 +126,7 @@ def train_all():
                         
                 # call the command
                 if not os.path.exists(encoder_path):
+                    print(train_cmd)
                     process = subprocess.run(
                         train_cmd.split(),
                         check=True, # raise exception if code fails
@@ -132,26 +136,26 @@ def train_all():
     # save wandb training report on all runs
     runs_df = get_wandb_train_report()
     
-    # keep best wandb runs across all seeds
             
 def get_embeddings():  
          
     # create mixture embeddings for all ihmp data
     for distance_str in distance_strs:
         for embedding_size in embedding_sizes:
-            for ihmp_path in ihmp_paths:
+            for ihmp_data_path in ihmp_data_paths:
                 
                 # filenames
-                model_name = '{}_{}_{}_{}'.format(model_class, distance_str, embedding_size, seed)
+                # model_name = '{}_{}_{}_{}'.format(model_class, distance_str, embedding_size, seed)
+                model_name = '{}_{}_{}'.format(model_class, distance_str, embedding_size)
                 encoder_path = '{}/{}_model.pickle'.format(model_dir, model_name)                
-                ihmp_name = ihmp_path.split('/')[-1].split('_')[0]
-                otu_embeddings_path = '{}/otu_embeddings/{}/{}_otu_embeddings.pickle'.format(processed_dir, ihmp_name, model_name)
-                mixture_embeddings_path =  '{}/mixture_embeddings/{}/{}_mixture_embeddings.pickle'.format(processed_dir, ihmp_name, model_name)
+                ihmp_name = ihmp_data_path.split('/')[-1].split('_')[0]
+                otu_embeddings_path = '{}/otu_embeddings/{}/{}_otu_embeddings.csv'.format(processed_dir, ihmp_name, model_name)
+                mixture_embeddings_path =  '{}/mixture_embeddings/{}/{}_mixture_embeddings.csv'.format(processed_dir, ihmp_name, model_name)
                 
                 # define command
                 mixture_embeddings_cmd = 'python src/embeddings/embeddings.py' \
                     + ' --outdir {}'.format(processed_dir) \
-                    + ' --ihmp_data {}'.format(ihmp_path) \
+                    + ' --ihmp_data_path {}'.format(ihmp_data_path) \
                     + ' --encoder_path {}'.format(encoder_path) \
                     + ' --auxillary_data_path {}'.format(auxillary_data_path) \
                     + ' --batch_size {}'.format(batch_size) \
@@ -169,4 +173,4 @@ def get_embeddings():
                     
 if __name__ == '__main__':
     train_all()
-    # get_embeddings()
+    get_embeddings()
