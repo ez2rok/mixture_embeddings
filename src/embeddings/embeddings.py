@@ -2,6 +2,7 @@ import argparse
 
 import torch
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 from geomstats.geometry.hyperbolic import Hyperbolic
@@ -9,7 +10,7 @@ from geomstats.learning.frechet_mean import FrechetMean
 
 # local files
 from src.util.data_handling.string_generator import str_seq_to_num_seq, ALPHABETS
-from src.util.data_handling.data_loader import save_as_pickle, load_dataset
+from src.util.data_handling.data_loader import save_as_pickle, load_dataset, make_dir
 from src.util.data_handling.closest_string_dataset import ReferenceDataset, QueryDataset
 
 from icecream import ic
@@ -61,7 +62,7 @@ def embed_strings(loader, model, device, desc='Embedding sequences'):
         embedded = model.encode(sequences)
         embeddings.append(embedded.cpu().detach())
 
-    embeddings = torch.cat(embeddings, axis=0)
+    embeddings = np.vstack(embeddings)
     return embeddings
 
 
@@ -147,35 +148,68 @@ def get_mixture_embeddings(data, otu_embeddings, distance_str):
     return mixture_embeddings
 
 
-def get_embeddings(encoder_path, ihmp_data, outdir, batch_size, no_cuda, auxillary_data_path='data/interim/greengenes/auxillary_data.pickle', seed=42, save=True):
+# def get_embeddings(encoder_path, ihmp_data_path, outdir, batch_size, no_cuda, auxillary_data_path='data/interim/greengenes/auxillary_data.pickle', seed=42, save=True):
+#     """Get mixture embeddings for all data"""
+    
+#     model_name = '_'.join(encoder_path.split('/')[-1].split('_')[:-1])
+#     distance_str = model_name.split('_')[1]
+    
+#     # load data        
+#     data = pd.read_csv(ihmp_data_path, index_col='Sample')
+#     otu_ids = data.columns.to_list()
+#     ihmp_name = ihmp_data_path.split('/')[-1].split("_")[0]
+
+#     print('\n' + '-'*5 + 'Compute {} Embeddings'.format(ihmp_name) + '-'*5)
+#     otu_embeddings = get_otu_embeddings(otu_ids, encoder_path, batch_size, seed=seed, no_cuda=no_cuda, auxillary_data_path=auxillary_data_path)
+#     if save:
+#         otu_filename = '{}/otu_embeddings/{}/{}_otu_embeddings.pickle'.format(outdir, ihmp_name, model_name)
+#         save_as_pickle(otu_embeddings, otu_filename)
+    
+#     mixture_embeddings = get_mixture_embeddings(data, otu_embeddings, distance_str)
+#     if save:
+#         mixture_filename = '{}/mixture_embeddings/{}/{}_mixture_embeddings.pickle'.format(outdir, ihmp_name, model_name)
+#         save_as_pickle(mixture_embeddings, mixture_filename)
+    
+#     return otu_embeddings, mixture_embeddings
+
+def get_embeddings(encoder_path, ihmp_data_path, outdir, batch_size, auxillary_data_path='data/interim/greengenes/auxillary_data.pickle', seed=42, save=True, no_cuda=False):
     """Get mixture embeddings for all data"""
     
+    # inital values
     model_name = '_'.join(encoder_path.split('/')[-1].split('_')[:-1])
+    model_class = model_name.split('_')[0]
     distance_str = model_name.split('_')[1]
+    embedding_size = model_name.split('_')[2]
+    data_name = ihmp_data_path.split('/')[-1].split("_")[0]
+    print('\n' + '-'*5 + 'Compute {} embeddings ({} {} {})'.format(data_name, model_class, distance_str, embedding_size) + '-'*5)
     
     # load data        
-    data = load_dataset(ihmp_data)
+    data = pd.read_csv(ihmp_data_path, index_col='Sample')
     otu_ids = data.columns.to_list()
-    ihmp_name = ihmp_data.split('/')[-1].split("_")[0]
 
-    print('\n' + '-'*5 + 'Compute {} Embeddings'.format(ihmp_name) + '-'*5)
+    # compute and save otu embeddings
     otu_embeddings = get_otu_embeddings(otu_ids, encoder_path, batch_size, seed=seed, no_cuda=no_cuda, auxillary_data_path=auxillary_data_path)
+    otu_embeddings_df = pd.DataFrame(otu_embeddings, index=data.columns)
+    otu_embeddings_df.index.name = 'OTU'
     if save:
-        otu_filename = '{}/otu_embeddings/{}/{}_otu_embeddings.pickle'.format(outdir, ihmp_name, model_name)
-        save_as_pickle(otu_embeddings, otu_filename)
+        otu_filename = '{}/otu_embeddings/{}/{}_otu_embeddings.csv'.format(outdir, data_name, model_name)
+        otu_embeddings_df.to_csv(make_dir(otu_filename))
     
+    # compute and save mixture embeddings
     mixture_embeddings = get_mixture_embeddings(data, otu_embeddings, distance_str)
+    mixture_embeddings_df = pd.DataFrame(mixture_embeddings, index=data.index.to_list())
+    mixture_embeddings_df.index.name = 'Sample'
     if save:
-        mixture_filename = '{}/mixture_embeddings/{}/{}_mixture_embeddings.pickle'.format(outdir, ihmp_name, model_name)
-        save_as_pickle(mixture_embeddings, mixture_filename)
+        mixture_filename = '{}/mixture_embeddings/{}/{}_mixture_embeddings.csv'.format(outdir, data_name, model_name)
+        mixture_embeddings_df.to_csv(make_dir(mixture_filename))
     
-    return otu_embeddings, mixture_embeddings
+    return otu_embeddings_df, mixture_embeddings_df
 
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--outdir', type=str, default='data/processed', help='Output data path')
-    parser.add_argument('--ihmp_data', type=str,  default='data/interim/ihmp', help='Path to ihmp data.')
+    parser.add_argument('--ihmp_data_path', type=str,  default='data/interim/ihmp', help='Path to ihmp data.')
     parser.add_argument('--encoder_path', type=str, default='models2/cnn_hyperbolic_16_model.pickle', help='Directory with otu embeddings.')
     parser.add_argument('--auxillary_data_path', type=str, default='data/interim/greengenes/auxillary_data.pickle', help='File with the auxillary data.')
     parser.add_argument('--batch_size', type=int, default=128, help='The batch size of the encoder model.')
@@ -185,4 +219,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     args.no_cuda = True if args.no_cuda == 'True' else False
-    get_embeddings(args.encoder_path, args.ihmp_data, args.outdir, args.batch_size, args.no_cuda, auxillary_data_path=args.auxillary_data_path, seed=args.seed, save=args.save)
+    get_embeddings(args.encoder_path, args.ihmp_data_path, args.outdir, args.batch_size, no_cuda=args.no_cuda, auxillary_data_path=args.auxillary_data_path, seed=args.seed, save=args.save)
