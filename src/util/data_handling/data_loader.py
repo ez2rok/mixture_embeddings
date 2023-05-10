@@ -7,6 +7,15 @@ def load_dataset(path):
     with open(path, 'rb') as f:
         return pickle.load(f)
     
+    
+def make_dir(filename):
+    
+    directory = os.path.dirname(filename)
+    if directory != '' and not os.path.exists(directory):
+        os.makedirs(directory)
+    return filename
+        
+    
 def save_as_pickle(obj, filename='../../data/processed/greengenes/'):
     
     directory = os.path.dirname(filename)
