@@ -5,8 +5,12 @@ import subprocess
 
 
 import torch
+import wandb
+
+import pandas as pd 
 import numpy as np
 import geomstats.backend as gs
+
 
 from icecream import ic
 
@@ -48,6 +52,37 @@ embedding_size_to_epochs = {
     64: 500,
     128: 500
 }
+
+def get_wandb_train_report():
+        
+    api = wandb.Api()
+
+    # Project is specified by <entity/project-name>
+    runs = api.runs("eturok/Greengenes Embeddings")
+
+    results = []
+    for run in runs: 
+        # .summary contains the output keys/values for metrics like accuracy.
+        #  We call ._json_dict to omit large files 
+        summary = run.summary._json_dict
+
+        # .config contains the hyperparameters.
+        #  We remove special values that start with _.
+        config = {k: v for k,v in run.config.items() if not k.startswith('_')}
+
+        # .name is the human-readable name of the run.
+        name = {'name': run.name}
+        
+        results.append(name | summary | config)
+    runs_df = pd.DataFrame(results)
+
+    runtimes = [list(dictionary.values())[0] for dictionary in runs_df['_wandb'].to_list()]
+    runs_df = runs_df.rename(columns={'_wandb': 'runtime (secs)'})
+    runs_df['runtime (secs)'] = runtimes
+
+    runs_df.to_csv("reports/wandb_training_runs.csv")
+    return runs_df
+
 
 def train_all():
     """train models with various distance functions, embedding sizes, and seed."""
@@ -93,6 +128,11 @@ def train_all():
                         check=True, # raise exception if code fails
                         encoding="utf-8"
                         )
+                    
+    # save wandb training report on all runs
+    runs_df = get_wandb_train_report()
+    
+    # keep best wandb runs across all seeds
             
 def get_embeddings():  
          
