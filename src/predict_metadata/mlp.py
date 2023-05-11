@@ -97,7 +97,7 @@ class MLP:
         self.trainer = None
         self.model = None
     
-    def fit(self, X_train, y_train):
+    def fit(self, X_train, y_train, X_test, y_test, config={}):
         
         self.num_classes = np.max(y_train) + 1
         
@@ -108,15 +108,19 @@ class MLP:
             )
         train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=self.batch_size, shuffle=False)
         
+        eval_dataset = torch.utils.data.TensorDataset(torch.from_numpy(X_test.astype(np.float32)), 
+                                                      torch.from_numpy(y_test))       
+        eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=self.batch_size, shuffle=False)
+        
         # model
         embedding_size = X_train.shape[1]
         model = MLPModel(embedding_size, h1=self.h1, h2=self.h2, num_classes=self.num_classes)
         self.model = model
         
         # logger
-        n_samples = len(X_train)
         wandb_logger = WandBLogger(
-            project='IBD Classifier',
+            project='Mixtute Predictions',
+            name = '{}: {} ({})'.format(config['feature'].capitalize(), config['space'], config['fold']),
             init_kwargs = {
                 'config': {
                     'seed': self.seed,
@@ -125,7 +129,7 @@ class MLP:
                     'batch_size': self.batch_size,
                     'hidden 1': self.h1,
                     'hidden 2': self.h2
-                    }
+                    } | config
                 }
             )
 
@@ -133,6 +137,7 @@ class MLP:
         trainer = Trainer(
             model=model,
             train_dataloader=train_dataloader,
+            eval_dataloader=eval_dataloader,
             optimizers=torch.optim.Adam(model.parameters(), lr=self.lr),
             max_duration=self.duration,
             device='gpu',
@@ -153,7 +158,7 @@ class MLP:
         if y_test is None:
             y_test = np.zeros_like(X_test)
         eval_dataset = torch.utils.data.TensorDataset(torch.from_numpy(X_test.astype(np.float32)), 
-                                                      torch.from_numpy(y_test.astype(np.float32)))       
+                                                      torch.from_numpy(y_test))       
         eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=self.batch_size, shuffle=False)
         
         # run eval (mainly so the metrics show up in wandb)
@@ -162,4 +167,8 @@ class MLP:
         # run predict
         y_pred = self.trainer.predict(eval_dataloader)
         _, y_pred = torch.vstack(tuple(y_pred)).max(1)
+        
+        delattr(self.trainer, "logger")
+        
+        
         return y_pred
