@@ -1,0 +1,271 @@
+,f1,feature,task,space,model,split,mse
+0,0.7019862490450726,Hospital,clf,raw full,rf clf,0,
+1,0.575,Hospital,clf,raw full,rf clf,1,
+2,0.24747474747474746,Hospital,clf,raw full,rf clf,2,
+3,0.589712918660287,Hospital,clf,raw full,rf clf,3,
+4,0.39047619047619053,Hospital,clf,raw full,rf clf,4,
+5,0.5426587301587302,Hospital,clf,raw pca,rf clf,0,
+6,0.26969696969696966,Hospital,clf,raw pca,rf clf,1,
+7,0.35574229691876746,Hospital,clf,raw pca,rf clf,2,
+8,0.36764705882352944,Hospital,clf,raw pca,rf clf,3,
+9,0.30514705882352944,Hospital,clf,raw pca,rf clf,4,
+10,0.47870879120879123,Hospital,clf,raw mds,rf clf,0,
+11,0.5277777777777777,Hospital,clf,raw mds,rf clf,1,
+12,0.3325396825396825,Hospital,clf,raw mds,rf clf,2,
+13,0.5343137254901961,Hospital,clf,raw mds,rf clf,3,
+14,0.43452380952380953,Hospital,clf,raw mds,rf clf,4,
+15,0.2926470588235294,Hospital,clf,euclidean,rf clf,0,
+16,0.26310160427807483,Hospital,clf,euclidean,rf clf,1,
+17,0.17460317460317462,Hospital,clf,euclidean,rf clf,2,
+18,0.26726190476190476,Hospital,clf,euclidean,rf clf,3,
+19,0.2619047619047619,Hospital,clf,euclidean,rf clf,4,
+20,0.225,Hospital,clf,tangent,rf clf,0,
+21,0.5333333333333333,Hospital,clf,tangent,rf clf,1,
+22,0.3035714285714286,Hospital,clf,tangent,rf clf,2,
+23,0.3104166666666667,Hospital,clf,tangent,rf clf,3,
+24,0.35267857142857145,Hospital,clf,tangent,rf clf,4,
+25,0.36538461538461536,Hospital,clf,hyperbolic,rf clf,0,
+26,0.28888888888888886,Hospital,clf,hyperbolic,rf clf,1,
+27,0.28342245989304815,Hospital,clf,hyperbolic,rf clf,2,
+28,0.382051282051282,Hospital,clf,hyperbolic,rf clf,3,
+29,0.39514652014652013,Hospital,clf,hyperbolic,rf clf,4,
+30,,Age,reg,raw full,rf reg,0,448.36079
+31,,Age,reg,raw full,rf reg,1,212.0528157894737
+32,,Age,reg,raw full,rf reg,2,96.04980564458765
+33,,Age,reg,raw full,rf reg,3,339.43996842105264
+34,,Age,reg,raw full,rf reg,4,172.27325209356724
+35,,Age,reg,raw pca,rf reg,0,660.8522799999998
+36,,Age,reg,raw pca,rf reg,1,284.2180105263158
+37,,Age,reg,raw pca,rf reg,2,294.87680526315785
+38,,Age,reg,raw pca,rf reg,3,269.3997105263158
+39,,Age,reg,raw pca,rf reg,4,248.43222718128655
+40,,Age,reg,raw mds,rf reg,0,532.87613
+41,,Age,reg,raw mds,rf reg,1,451.54351052631574
+42,,Age,reg,raw mds,rf reg,2,309.4419052631579
+43,,Age,reg,raw mds,rf reg,3,396.0056473684211
+44,,Age,reg,raw mds,rf reg,4,377.2330684210526
+45,,Age,reg,euclidean,rf reg,0,620.268195
+46,,Age,reg,euclidean,rf reg,1,333.34787426900584
+47,,Age,reg,euclidean,rf reg,2,238.15503684210523
+48,,Age,reg,euclidean,rf reg,3,731.7973140064978
+49,,Age,reg,euclidean,rf reg,4,203.9690194853801
+50,,Age,reg,tangent,rf reg,0,643.05161067828
+51,,Age,reg,tangent,rf reg,1,448.6053189603526
+52,,Age,reg,tangent,rf reg,2,316.1534544410101
+53,,Age,reg,tangent,rf reg,3,503.78113145680464
+54,,Age,reg,tangent,rf reg,4,296.23544253192193
+55,,Age,reg,hyperbolic,rf reg,0,599.3140987931826
+56,,Age,reg,hyperbolic,rf reg,1,349.6802390079901
+57,,Age,reg,hyperbolic,rf reg,2,333.6957606890249
+58,,Age,reg,hyperbolic,rf reg,3,427.8573733905998
+59,,Age,reg,hyperbolic,rf reg,4,403.66445267892755
+60,0.40625,Diagnosis,clf,raw full,rf clf,0,
+61,0.6041666666666666,Diagnosis,clf,raw full,rf clf,1,
+62,0.42424242424242425,Diagnosis,clf,raw full,rf clf,2,
+63,0.6041666666666666,Diagnosis,clf,raw full,rf clf,3,
+64,0.42424242424242425,Diagnosis,clf,raw full,rf clf,4,
+65,0.6360153256704981,Diagnosis,clf,raw pca,rf clf,0,
+66,0.9124423963133641,Diagnosis,clf,raw pca,rf clf,1,
+67,0.38709677419354843,Diagnosis,clf,raw pca,rf clf,2,
+68,0.6041666666666666,Diagnosis,clf,raw pca,rf clf,3,
+69,0.6041666666666666,Diagnosis,clf,raw pca,rf clf,4,
+70,0.42424242424242425,Diagnosis,clf,raw mds,rf clf,0,
+71,0.5622119815668203,Diagnosis,clf,raw mds,rf clf,1,
+72,0.4411764705882353,Diagnosis,clf,raw mds,rf clf,2,
+73,0.6041666666666666,Diagnosis,clf,raw mds,rf clf,3,
+74,0.4411764705882353,Diagnosis,clf,raw mds,rf clf,4,
+75,0.40625,Diagnosis,clf,euclidean,rf clf,0,
+76,0.6545454545454545,Diagnosis,clf,euclidean,rf clf,1,
+77,0.40625,Diagnosis,clf,euclidean,rf clf,2,
+78,0.5622119815668203,Diagnosis,clf,euclidean,rf clf,3,
+79,0.5250000000000001,Diagnosis,clf,euclidean,rf clf,4,
+80,0.6041666666666666,Diagnosis,clf,tangent,rf clf,0,
+81,0.5928571428571427,Diagnosis,clf,tangent,rf clf,1,
+82,0.6545454545454545,Diagnosis,clf,tangent,rf clf,2,
+83,0.6041666666666666,Diagnosis,clf,tangent,rf clf,3,
+84,0.38709677419354843,Diagnosis,clf,tangent,rf clf,4,
+85,0.42424242424242425,Diagnosis,clf,hyperbolic,rf clf,0,
+86,0.5928571428571427,Diagnosis,clf,hyperbolic,rf clf,1,
+87,0.6041666666666666,Diagnosis,clf,hyperbolic,rf clf,2,
+88,0.6545454545454545,Diagnosis,clf,hyperbolic,rf clf,3,
+89,0.5622119815668203,Diagnosis,clf,hyperbolic,rf clf,4,
+90,,HBI,reg,raw full,rf reg,0,8.361205
+91,,HBI,reg,raw full,rf reg,1,16.885957894736844
+92,,HBI,reg,raw full,rf reg,2,4.395036842105264
+93,,HBI,reg,raw full,rf reg,3,3.817121052631579
+94,,HBI,reg,raw full,rf reg,4,8.619763157894738
+95,,HBI,reg,raw pca,rf reg,0,10.061304999999999
+96,,HBI,reg,raw pca,rf reg,1,17.52393684210526
+97,,HBI,reg,raw pca,rf reg,2,11.73056842105263
+98,,HBI,reg,raw pca,rf reg,3,19.118105263157894
+99,,HBI,reg,raw pca,rf reg,4,6.3556368421052625
+100,,HBI,reg,raw mds,rf reg,0,5.6560299999999994
+101,,HBI,reg,raw mds,rf reg,1,15.37961052631579
+102,,HBI,reg,raw mds,rf reg,2,9.720273684210527
+103,,HBI,reg,raw mds,rf reg,3,4.165415789473684
+104,,HBI,reg,raw mds,rf reg,4,15.645963157894734
+105,,HBI,reg,euclidean,rf reg,0,15.735655000000003
+106,,HBI,reg,euclidean,rf reg,1,18.639836842105264
+107,,HBI,reg,euclidean,rf reg,2,4.257063157894737
+108,,HBI,reg,euclidean,rf reg,3,7.279799999999999
+109,,HBI,reg,euclidean,rf reg,4,7.7792157894736835
+110,,HBI,reg,tangent,rf reg,0,7.4996759922903875
+111,,HBI,reg,tangent,rf reg,1,16.24433786868455
+112,,HBI,reg,tangent,rf reg,2,4.573246663644508
+113,,HBI,reg,tangent,rf reg,3,5.938115585389855
+114,,HBI,reg,tangent,rf reg,4,10.069854877804211
+115,,HBI,reg,hyperbolic,rf reg,0,8.589327461392134
+116,,HBI,reg,hyperbolic,rf reg,1,15.905703814704754
+117,,HBI,reg,hyperbolic,rf reg,2,5.295895431872696
+118,,HBI,reg,hyperbolic,rf reg,3,5.812660854715468
+119,,HBI,reg,hyperbolic,rf reg,4,9.406140631735303
+120,0.4871794871794871,Sex,clf,raw full,rf clf,0,
+121,0.6801346801346801,Sex,clf,raw full,rf clf,1,
+122,0.7076923076923077,Sex,clf,raw full,rf clf,2,
+123,0.6607142857142858,Sex,clf,raw full,rf clf,3,
+124,0.6144927536231883,Sex,clf,raw full,rf clf,4,
+125,0.6875000000000001,Sex,clf,raw pca,rf clf,0,
+126,0.5476190476190477,Sex,clf,raw pca,rf clf,1,
+127,0.5907692307692308,Sex,clf,raw pca,rf clf,2,
+128,0.7338935574229692,Sex,clf,raw pca,rf clf,3,
+129,0.8403361344537816,Sex,clf,raw pca,rf clf,4,
+130,0.6703296703296703,Sex,clf,raw mds,rf clf,0,
+131,0.7840909090909092,Sex,clf,raw mds,rf clf,1,
+132,0.6144927536231883,Sex,clf,raw mds,rf clf,2,
+133,0.6274509803921569,Sex,clf,raw mds,rf clf,3,
+134,0.7338935574229692,Sex,clf,raw mds,rf clf,4,
+135,0.5833333333333334,Sex,clf,euclidean,rf clf,0,
+136,0.6607142857142858,Sex,clf,euclidean,rf clf,1,
+137,0.5476190476190477,Sex,clf,euclidean,rf clf,2,
+138,0.788888888888889,Sex,clf,euclidean,rf clf,3,
+139,0.6144927536231883,Sex,clf,euclidean,rf clf,4,
+140,0.52,Sex,clf,tangent,rf clf,0,
+141,0.6144927536231883,Sex,clf,tangent,rf clf,1,
+142,0.3448275862068966,Sex,clf,tangent,rf clf,2,
+143,0.7840909090909092,Sex,clf,tangent,rf clf,3,
+144,0.5476190476190477,Sex,clf,tangent,rf clf,4,
+145,0.5396419437340154,Sex,clf,hyperbolic,rf clf,0,
+146,0.5476190476190477,Sex,clf,hyperbolic,rf clf,1,
+147,0.4571428571428572,Sex,clf,hyperbolic,rf clf,2,
+148,0.6761363636363636,Sex,clf,hyperbolic,rf clf,3,
+149,0.35692307692307695,Sex,clf,hyperbolic,rf clf,4,
+150,0.47058823529411764,Race,clf,raw full,rf clf,0,
+151,0.47058823529411764,Race,clf,raw full,rf clf,1,
+152,0.46875,Race,clf,raw full,rf clf,2,
+153,0.46875,Race,clf,raw full,rf clf,3,
+154,0.45161290322580644,Race,clf,raw full,rf clf,4,
+155,0.8181818181818181,Race,clf,raw pca,rf clf,0,
+156,0.47058823529411764,Race,clf,raw pca,rf clf,1,
+157,0.45161290322580644,Race,clf,raw pca,rf clf,2,
+158,0.45161290322580644,Race,clf,raw pca,rf clf,3,
+159,0.43333333333333335,Race,clf,raw pca,rf clf,4,
+160,0.47058823529411764,Race,clf,raw mds,rf clf,0,
+161,0.47058823529411764,Race,clf,raw mds,rf clf,1,
+162,0.45161290322580644,Race,clf,raw mds,rf clf,2,
+163,0.7166666666666667,Race,clf,raw mds,rf clf,3,
+164,0.46875,Race,clf,raw mds,rf clf,4,
+165,0.47058823529411764,Race,clf,euclidean,rf clf,0,
+166,0.47058823529411764,Race,clf,euclidean,rf clf,1,
+167,0.46875,Race,clf,euclidean,rf clf,2,
+168,0.46875,Race,clf,euclidean,rf clf,3,
+169,0.45161290322580644,Race,clf,euclidean,rf clf,4,
+170,0.71875,Race,clf,tangent,rf clf,0,
+171,0.4375,Race,clf,tangent,rf clf,1,
+172,0.45161290322580644,Race,clf,tangent,rf clf,2,
+173,0.45161290322580644,Race,clf,tangent,rf clf,3,
+174,0.45161290322580644,Race,clf,tangent,rf clf,4,
+175,0.71875,Race,clf,hyperbolic,rf clf,0,
+176,0.4375,Race,clf,hyperbolic,rf clf,1,
+177,0.45161290322580644,Race,clf,hyperbolic,rf clf,2,
+178,0.8172043010752688,Race,clf,hyperbolic,rf clf,3,
+179,0.4137931034482759,Race,clf,hyperbolic,rf clf,4,
+180,,Fecalcal,reg,raw full,rf reg,0,6426.2497945575
+181,,Fecalcal,reg,raw full,rf reg,1,5986.722288312048
+182,,Fecalcal,reg,raw full,rf reg,2,5423.962472721932
+183,,Fecalcal,reg,raw full,rf reg,3,7680.886364536154
+184,,Fecalcal,reg,raw full,rf reg,4,4202.841660812436
+185,,Fecalcal,reg,raw pca,rf reg,0,9803.47634977449
+186,,Fecalcal,reg,raw pca,rf reg,1,8840.579244113163
+187,,Fecalcal,reg,raw pca,rf reg,2,10338.515603808648
+188,,Fecalcal,reg,raw pca,rf reg,3,9753.473084892636
+189,,Fecalcal,reg,raw pca,rf reg,4,5636.514157487835
+190,,Fecalcal,reg,raw mds,rf reg,0,8430.518384899007
+191,,Fecalcal,reg,raw mds,rf reg,1,6687.050221854736
+192,,Fecalcal,reg,raw mds,rf reg,2,7509.829959020003
+193,,Fecalcal,reg,raw mds,rf reg,3,7424.588751866312
+194,,Fecalcal,reg,raw mds,rf reg,4,5410.580128830524
+195,,Fecalcal,reg,euclidean,rf reg,0,12122.943049146994
+196,,Fecalcal,reg,euclidean,rf reg,1,7476.046445752633
+197,,Fecalcal,reg,euclidean,rf reg,2,7432.7851361894745
+198,,Fecalcal,reg,euclidean,rf reg,3,8954.212241674759
+199,,Fecalcal,reg,euclidean,rf reg,4,5885.337844186321
+200,,Fecalcal,reg,tangent,rf reg,0,11347.0381258677
+201,,Fecalcal,reg,tangent,rf reg,1,10874.074481758666
+202,,Fecalcal,reg,tangent,rf reg,2,6441.249831368757
+203,,Fecalcal,reg,tangent,rf reg,3,10348.700918164886
+204,,Fecalcal,reg,tangent,rf reg,4,6767.715386116145
+205,,Fecalcal,reg,hyperbolic,rf reg,0,10612.647513635928
+206,,Fecalcal,reg,hyperbolic,rf reg,1,10829.553421110211
+207,,Fecalcal,reg,hyperbolic,rf reg,2,6413.71847232948
+208,,Fecalcal,reg,hyperbolic,rf reg,3,9577.757293548086
+209,,Fecalcal,reg,hyperbolic,rf reg,4,6193.4578527389785
+210,,SCCAI,reg,raw full,rf reg,0,1.5032349999999999
+211,,SCCAI,reg,raw full,rf reg,1,1.492263157894737
+212,,SCCAI,reg,raw full,rf reg,2,9.705015789473686
+213,,SCCAI,reg,raw full,rf reg,3,1.292230315789474
+214,,SCCAI,reg,raw full,rf reg,4,2.0626343143274855
+215,,SCCAI,reg,raw pca,rf reg,0,2.0796600000000005
+216,,SCCAI,reg,raw pca,rf reg,1,2.9422473684210524
+217,,SCCAI,reg,raw pca,rf reg,2,9.026552631578948
+218,,SCCAI,reg,raw pca,rf reg,3,1.399015789473684
+219,,SCCAI,reg,raw pca,rf reg,4,3.1451092646198826
+220,,SCCAI,reg,raw mds,rf reg,0,1.9681450000000003
+221,,SCCAI,reg,raw mds,rf reg,1,3.9448684210526315
+222,,SCCAI,reg,raw mds,rf reg,2,9.70644736842105
+223,,SCCAI,reg,raw mds,rf reg,3,0.7756578947368421
+224,,SCCAI,reg,raw mds,rf reg,4,3.3722421052631577
+225,,SCCAI,reg,euclidean,rf reg,0,1.936965
+226,,SCCAI,reg,euclidean,rf reg,1,2.2454578947368424
+227,,SCCAI,reg,euclidean,rf reg,2,9.020815789473685
+228,,SCCAI,reg,euclidean,rf reg,3,2.23302210022742
+229,,SCCAI,reg,euclidean,rf reg,4,2.432940972222222
+230,,SCCAI,reg,tangent,rf reg,0,1.7268209237128573
+231,,SCCAI,reg,tangent,rf reg,1,2.6934936690772564
+232,,SCCAI,reg,tangent,rf reg,2,8.89887483831923
+233,,SCCAI,reg,tangent,rf reg,3,1.2357359057672506
+234,,SCCAI,reg,tangent,rf reg,4,1.7435044177305978
+235,,SCCAI,reg,hyperbolic,rf reg,0,1.2099772009630338
+236,,SCCAI,reg,hyperbolic,rf reg,1,2.5859859207147182
+237,,SCCAI,reg,hyperbolic,rf reg,2,9.02640166822816
+238,,SCCAI,reg,hyperbolic,rf reg,3,1.8188754008702759
+239,,SCCAI,reg,hyperbolic,rf reg,4,2.113833944243798
+240,,fb ratio,reg,raw full,rf reg,0,2460.26996588362
+241,,fb ratio,reg,raw full,rf reg,1,111.20232914893953
+242,,fb ratio,reg,raw full,rf reg,2,116.41535835889664
+243,,fb ratio,reg,raw full,rf reg,3,219.35000433208197
+244,,fb ratio,reg,raw full,rf reg,4,26.820205763202495
+245,,fb ratio,reg,raw pca,rf reg,0,2555.433756132951
+246,,fb ratio,reg,raw pca,rf reg,1,177.2287850205882
+247,,fb ratio,reg,raw pca,rf reg,2,68.03335045506398
+248,,fb ratio,reg,raw pca,rf reg,3,88.27738270228257
+249,,fb ratio,reg,raw pca,rf reg,4,155.44666615063306
+250,,fb ratio,reg,raw mds,rf reg,0,2684.019665569727
+251,,fb ratio,reg,raw mds,rf reg,1,268.8116759710776
+252,,fb ratio,reg,raw mds,rf reg,2,48.20054948361329
+253,,fb ratio,reg,raw mds,rf reg,3,7.737417131769409
+254,,fb ratio,reg,raw mds,rf reg,4,1936.0616493428993
+255,,fb ratio,reg,euclidean,rf reg,0,3014.2820864841806
+256,,fb ratio,reg,euclidean,rf reg,1,370.86888584698727
+257,,fb ratio,reg,euclidean,rf reg,2,142.6218619704916
+258,,fb ratio,reg,euclidean,rf reg,3,161.65972650378413
+259,,fb ratio,reg,euclidean,rf reg,4,1163.0291558217234
+260,,fb ratio,reg,tangent,rf reg,0,3074.893602123539
+261,,fb ratio,reg,tangent,rf reg,1,309.73358180733817
+262,,fb ratio,reg,tangent,rf reg,2,45.17683337969849
+263,,fb ratio,reg,tangent,rf reg,3,216.40926708073485
+264,,fb ratio,reg,tangent,rf reg,4,1803.6799523388354
+265,,fb ratio,reg,hyperbolic,rf reg,0,3091.703778348079
+266,,fb ratio,reg,hyperbolic,rf reg,1,326.66651299583674
+267,,fb ratio,reg,hyperbolic,rf reg,2,22.743700778490837
+268,,fb ratio,reg,hyperbolic,rf reg,3,30.316257959764112
+269,,fb ratio,reg,hyperbolic,rf reg,4,410.9495782091684
