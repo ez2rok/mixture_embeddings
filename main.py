@@ -33,7 +33,7 @@ sequences_distances_data_path = 'data/interim/greengenes/sequences_distances.pic
 model_dir = 'models'
 
 # ihmp_names = ['ibd', 't2d', 'moms']
-ihmp_names = ['ibd']
+ihmp_names = ['ibd', 'moms']
 ihmp_data_paths= ['{}/{}_data.csv'.format(ihmp_dir, ihmp_name) for ihmp_name in ihmp_names]
         
 # model parameters
@@ -82,7 +82,7 @@ def get_wandb_train_report():
     runs_df = runs_df.rename(columns={'_wandb': 'runtime (secs)'})
     runs_df['runtime (secs)'] = runtimes
 
-    runs_df.to_csv("reports/wandb_training_runs.csv")
+    runs_df.to_csv("reports/deep_learning/wandb_training_runs.csv")
     return runs_df
 
 
