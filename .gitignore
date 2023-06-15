@@ -5,6 +5,7 @@ wandb/
 /data/
 /models/
 /models2/
+/data2/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
