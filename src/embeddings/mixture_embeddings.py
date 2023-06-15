@@ -40,22 +40,26 @@ def get_mixture_embeddings(
     init_point=None,
     lr=0.001,
     save=True,
-    outpath = './data/mixture_embeddings/mixture_embeddings.tsv'
+    outpath = './data/mixture_embeddings/mixture_embeddings.tsv',
+    small=False
     ):
     
-    mixture_embeddings = []
+    mixture_embeddings = np.zeros((otu_table_df.shape[0], otu_embeddings_df.shape[1]))
     otu_embeddings = otu_embeddings_df.to_numpy()
     otu_table = otu_table_df.to_numpy()
     
     # loop over all samples in otu_table and weight the frechet mean by the otu
     # count of these samples
-    for weights in otu_table:
+    for i, weights in enumerate(otu_table):
         if space == 'hyperbolic':
             fmean = fmean_estimator(model, mode, embedding_size, lr=lr, max_iter=max_iter, init_point=init_point)
             mixture_embedding = fmean.fit(otu_embeddings, weights=weights).estimate_
         else: # euclidean space
             mixture_embedding = np.average(otu_embeddings, weights=weights, axis=0)
-        mixture_embeddings.append(mixture_embedding)
+        mixture_embeddings[i] = mixture_embedding
+        
+        if small:
+            break
         
     # format mixture_embeddings
     mixture_embeddings = np.array(mixture_embeddings)
