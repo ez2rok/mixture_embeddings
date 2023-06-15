@@ -52,7 +52,7 @@ def get_dataloader(num_seq, batch_size, labels=None):
     return dataloader
 
 
-def embed_strings(loader, model, device, desc='Embedding sequences'):
+def embed_strings(loader, model, device, desc='Making OTU Embeddings'):
     """ Embeds the sequences of a dataset one batch at the time given an encoder """
     embeddings = []
 
