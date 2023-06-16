@@ -84,48 +84,6 @@ def exponential(base, tangent):
     return np.cosh(norm) * base + np.sinh(norm) * tangent
 
 
-def frechet_mean(X, MIN_GRAD_NORM=1e-12, max_iter=32, return_history=False, init_point=None, lr=0.001, weights=None):
-    """
-    Given a 2d numpy array of X on the hyperboloid, keep making updates
-    until the gradient norm falls below MIN_GRAD_NORM; re-inits if necessary.
-    
-    This function requires X be in the hyperboloid model of geometry and outputs the frechet
-    mean also in the hyperboloid model of geometry.
-    """
-
-    # initial values
-    theta = X[0] if init_point is None else init_point
-    theta_history = [theta]
-    grad_norm_history = []
-    steps = 1
-    
-    while True:
-        
-        # compute hyperboloid gradient
-        hyperboloid_gradient = frechet_gradient(theta, X, weights=weights)
-        
-        # break if gradient is below threshold
-        dot = minkowski_dot(hyperboloid_gradient, hyperboloid_gradient)
-        gradient_norm = np.sqrt(dot)
-        grad_norm_history.append(gradient_norm)
-        if gradient_norm < MIN_GRAD_NORM:
-            break
-        
-        # update weights for next iteration 
-        theta = exponential(theta, -1 * lr * hyperboloid_gradient)
-        theta_history.append(theta)
-        steps += 1
-        
-        # break if took too many iterations passed
-        if steps >= max_iter:
-            print('WARNING: Maximum number of iterations {} reached. The mean may be inaccurate.'.format(steps))
-            break
-            
-    if return_history:
-        return theta, theta_history, grad_norm_history
-    return theta
-
-
 class FrechetMeanMan:
     """Compute the Frechet Mean manually."""
     
@@ -138,6 +96,50 @@ class FrechetMeanMan:
         self.estimate_ = None
         self.mean_history = None
         self.grad_norm_history = None
+        self.converged = True
+            
+    def frechet_mean(self, X, MIN_GRAD_NORM=1e-12, max_iter=32, return_history=False, init_point=None, lr=0.001, weights=None):
+        """
+        Given a 2d numpy array of X on the hyperboloid, keep making updates
+        until the gradient norm falls below MIN_GRAD_NORM; re-inits if necessary.
+        
+        This function requires X be in the hyperboloid model of geometry and outputs the frechet
+        mean also in the hyperboloid model of geometry.
+        """
+
+        # initial values
+        theta = X[0] if init_point is None else init_point
+        theta_history = [theta]
+        grad_norm_history = []
+        steps = 1
+        
+        while True:
+            
+            # compute hyperboloid gradient
+            hyperboloid_gradient = frechet_gradient(theta, X, weights=weights)
+            
+            # break if gradient is below threshold
+            dot = minkowski_dot(hyperboloid_gradient, hyperboloid_gradient)
+            gradient_norm = np.sqrt(dot)
+            grad_norm_history.append(gradient_norm)
+            if gradient_norm < MIN_GRAD_NORM:
+                break
+            
+            # update weights for next iteration 
+            theta = exponential(theta, -1 * lr * hyperboloid_gradient)
+            theta_history.append(theta)
+            steps += 1
+            
+            # break if took too many iterations passed
+            if steps >= max_iter:
+                # print('WARNING: Maximum number of iterations {} reached. The mean may be inaccurate.'.format(steps))
+                self.converged = False
+                break
+                
+        if return_history:
+            return theta, theta_history, grad_norm_history
+        return theta
+
         
     def fit(self, X, weights=None):
 
@@ -148,7 +150,7 @@ class FrechetMeanMan:
                 self.init_point = to_hyperboloid_point(self.init_point)
             
         # compute the frechet mean 
-        theta, theta_history, grad_norm_history = frechet_mean(
+        theta, theta_history, grad_norm_history = self.frechet_mean(
             X, 
             MIN_GRAD_NORM=self.epsilon,
             max_iter=self.max_iter,
