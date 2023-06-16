@@ -1,18 +1,12 @@
-import argparse
-
 import torch
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from geomstats.geometry.hyperbolic import Hyperbolic
-from geomstats.learning.frechet_mean import FrechetMean
-
 # local files
 from src.util.data_handling.string_generator import str_seq_to_num_seq, ALPHABETS
-from src.util.data_handling.data_loader import save_as_pickle, load_dataset, make_dir
+from src.util.data_handling.data_loader import load_dataset, make_dir
 from src.util.data_handling.closest_string_dataset import ReferenceDataset, QueryDataset
-from src.embeddings.frechet_mean_manual import frechet_mean
 
 from icecream import ic
 
