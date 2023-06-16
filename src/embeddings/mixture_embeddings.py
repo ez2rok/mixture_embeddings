@@ -40,13 +40,15 @@ def get_mixture_embeddings(
     init_point=None,
     lr=0.001,
     save=True,
-    outpath = './data/mixture_embeddings/mixture_embeddings.tsv',
-    small=False
+    outpath='./data/mixture_embeddings/mixture_embeddings.tsv',
+    small=False,
+    return_percent_converged=True
     ):
     
     mixture_embeddings = np.zeros((otu_table_df.shape[0], otu_embeddings_df.shape[1]))
     otu_embeddings = otu_embeddings_df.to_numpy()
     otu_table = otu_table_df.to_numpy()
+    percent_converged = []
     
     # loop over all samples in otu_table and weight the frechet mean by the otu
     # count of these samples
@@ -54,11 +56,12 @@ def get_mixture_embeddings(
         if space == 'hyperbolic':
             fmean = fmean_estimator(model, mode, embedding_size, lr=lr, max_iter=max_iter, init_point=init_point)
             mixture_embedding = fmean.fit(otu_embeddings, weights=weights).estimate_
+            percent_converged.append(fmean.converged)
         else: # euclidean space
             mixture_embedding = np.average(otu_embeddings, weights=weights, axis=0)
         mixture_embeddings[i] = mixture_embedding
         
-        if small:
+        if small and i >= small-1:
             break
         
     # format mixture_embeddings
@@ -69,5 +72,9 @@ def get_mixture_embeddings(
     # save
     if save:
         mixture_embeddings_df.to_csv(make_dir(outpath), sep='\t')
+        
+    if return_percent_converged:
+        percent_converged = sum(percent_converged) / len(percent_converged)
+        return mixture_embeddings_df, percent_converged
         
     return mixture_embeddings_df
