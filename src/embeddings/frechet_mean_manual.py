@@ -85,14 +85,14 @@ def exponential(base, tangent):
 
 
 class FrechetMeanMan:
-    """Compute the Frechet Mean manually."""
+    """Compute the Frechet Mean manually with the hyperboloid model of geometry.
+    Assume data is inputted as lying in the hyperboloid model of geometry."""
     
     def __init__(self, epsilon=1e-12, max_iter=32, init_point=None, lr=0.001):
         self.epsilon = epsilon
         self.max_iter = max_iter
         self.init_point = init_point
         self.lr = lr
-        self.model = 'poincare' # the model of geometry which the data X belongs to
         self.estimate_ = None
         self.mean_history = None
         self.grad_norm_history = None
@@ -142,12 +142,6 @@ class FrechetMeanMan:
 
         
     def fit(self, X, weights=None):
-
-        # convert poincare to hyperboloid        
-        if self.model == 'poincare':
-            X = to_hyperboloid_points(X)
-            if self.init_point is not None:
-                self.init_point = to_hyperboloid_point(self.init_point)
             
         # compute the frechet mean 
         theta, theta_history, grad_norm_history = self.frechet_mean(
@@ -159,13 +153,7 @@ class FrechetMeanMan:
             lr=self.lr,
             weights=weights
             )
-        
-        # convert hyperboloid to poincare     
-        if self.model == 'poincare':
-            theta = to_poincare_ball_point(theta)
-            theta_history = np.array([to_poincare_ball_point(hist) for hist in theta_history])
-            grad_norm_history = np.array(grad_norm_history)
-            
+
         # record values
         self.estimate_ = theta
         self.mean_history = theta_history
