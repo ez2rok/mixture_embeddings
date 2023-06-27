@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+import os
+
+from tqdm import trange, tqdm
 
 from geomstats.geometry.hyperbolic import Hyperbolic
 from geomstats.geometry.euclidean import Euclidean
@@ -41,7 +44,10 @@ def mixture_embedding(
     otu_embeddings: pd.DataFrame = None,
     geometry: str = "euclidean",
     max_iter: int = 1000,
-    hyperboloid: bool = False
+    hyperboloid: bool = False,
+    use_torch: bool = False,
+    n_jobs: int = 1,
+    **kwargs
 ) -> np.ndarray:
     n_samples = otu_table.shape[0]
     n_dim = otu_embeddings.shape[1]
@@ -52,6 +58,10 @@ def mixture_embedding(
     if geometry == "euclidean":
         return otu_table @ otu_embeddings
     elif geometry == "hyperbolic":
+        if use_torch:
+            os.environ["GEOMSTATS_BACKEND"] = "pytorch"
+            import torch
+        
         # Optional projection for numerical stability
         if hyperboloid:
             hyp = Hyperbolic(dim=n_dim, default_coords_type="extrinsic")
@@ -59,15 +69,45 @@ def mixture_embedding(
             mixture_embeddings = np.zeros((n_samples, n_dim + 1))
         else:
             hyp = Hyperbolic(dim=n_dim, default_coords_type="ball")
+            otu_embeddings = otu_embeddings.values
             mixture_embeddings = np.zeros((n_samples, n_dim))
         
+        if use_torch:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            # device = torch.device("cuda")
+            # print("Using device:", device)
+            otu_embeddings = torch.tensor(otu_embeddings, device=device)
+            mixture_embeddings = torch.tensor(mixture_embeddings, device=device)
+
         # Per-sample frechet means
         fmean = FrechetMean(hyp.metric, max_iter=max_iter)
-        for i, sample in enumerate(otu_table.index):
-            mixture_embeddings[i] = fmean.fit(
-                otu_embeddings, 
-                weights=otu_table.loc[sample].values, 
-            ).estimate_
+        if n_jobs == 1:
+            for i in trange(n_samples):
+                sample = otu_table.iloc[i].values
+                if use_torch:
+                    sample = torch.tensor(sample, device=device)
+                
+                mixture_embeddings[i] = fmean.fit(
+                    otu_embeddings, weights=sample, **kwargs
+                ).estimate_
+        else:
+            # Parallelize
+            from joblib import Parallel, delayed
+            def _fit(i):
+                sample = otu_table.iloc[i].values
+                if use_torch:
+                    sample = torch.tensor(sample, device=device)
+                return fmean.fit(
+                    otu_embeddings, weights=sample, **kwargs
+                ).estimate_
+            mixture_embeddings = Parallel(n_jobs=n_jobs)(
+                delayed(_fit)(i) for i in trange(n_samples)
+            )
+            mixture_embeddings = np.array(mixture_embeddings)
+
+        
+        if use_torch:
+            mixture_embeddings = mixture_embeddings.cpu().numpy()
         
         # Need to project back to Poincare ball
         if hyperboloid:
