@@ -63,7 +63,8 @@ def get_mixture_embeddings(
     save=True,
     outpath='./data/mixture_embeddings/mixture_embeddings.tsv',
     small=False,
-    return_percent_converged=True
+    return_percent_converged=True,
+    convert_back=True
     ):
     """
     fmean_model: the model of hyperbolic geometry which the frechet mean
@@ -88,7 +89,8 @@ def get_mixture_embeddings(
         if space == 'hyperbolic':
             fmean = fmean_estimator(fmean_model, mode, embedding_size, lr=lr, max_iter=max_iter, init_point=init_point)
             mixture_embedding = fmean.fit(otu_embeddings, weights=weights).estimate_
-            mixture_embedding = convert_geometry_after(fmean_model, data_model, mixture_embedding)
+            if convert_back:
+                mixture_embedding = convert_geometry_after(fmean_model, data_model, mixture_embedding)
             percent_converged.append(fmean.converged)
         else: # euclidean space
             mixture_embedding = np.average(otu_embeddings, weights=weights, axis=0)
@@ -107,7 +109,7 @@ def get_mixture_embeddings(
         mixture_embeddings_df.to_csv(make_dir(outpath), sep='\t')
         
     if return_percent_converged:
-        percent_converged = sum(percent_converged) / len(percent_converged)
+        percent_converged = sum(percent_converged) / (len(percent_converged) + 1e-9)
         return mixture_embeddings_df, percent_converged
         
     return mixture_embeddings_df
