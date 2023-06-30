@@ -113,6 +113,8 @@ def get_mixture_embeddings(
         (otu_table_df.shape[0], otu_embeddings_df.shape[1])
     )
     otu_embeddings = otu_embeddings_df.to_numpy()
+    ids = otu_table_df.index
+    ids = ids[:small] if small else ids
     otu_table = otu_table_df.to_numpy()
     percent_converged = []
 
@@ -147,20 +149,16 @@ def get_mixture_embeddings(
 
     # loop over all samples in otu_table and weight the frechet mean by the otu
     # count of these samples
+    Xvals = otu_table.iloc[:small] if small else otu_table
     if n_jobs == 1:
-        for i, weights in tqdm(enumerate(otu_table)):
+        for i, weights in tqdm(enumerate(Xvals)):
             mix_emb, pct_conv = _process_weights(weights)
             mixture_embeddings[i] = mix_emb
-            if pct_converged is not None:
+            if pct_conv is not None:
                 percent_converged.append(pct_conv)
-
-            if small and i >= small - 1:
-                break
     else:
-        # with tqdm(total=len(otu_table[: small if small else None])) as pbar:
-        Xvals = otu_table[: small if small else None]
         results = Parallel(n_jobs=n_jobs)(
-            delayed(_process_weights)(w) for w in tqdm(Xvals)
+            delayed(_process_weights)(w) for w in tqdm(Xvals, total=len(Xvals))
         )
         for i, (mix_emb, pct_conv) in enumerate(results):
             mixture_embeddings[i] = mix_emb
@@ -169,9 +167,7 @@ def get_mixture_embeddings(
 
     # format mixture_embeddings
     mixture_embeddings = np.array(mixture_embeddings)
-    mixture_embeddings_df = pd.DataFrame(
-        mixture_embeddings, index=otu_table_df.index.to_list()
-    )
+    mixture_embeddings_df = pd.DataFrame(mixture_embeddings, ids)
     mixture_embeddings_df.index.name = "Sample"
 
     # save
