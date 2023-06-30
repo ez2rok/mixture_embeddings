@@ -93,3 +93,6 @@ target/
 
 # Mypy cache
 .mypy_cache/
+
+# PAC exclusions
+notebooks/pac/data/processed/
