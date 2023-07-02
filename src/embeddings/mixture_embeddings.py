@@ -109,9 +109,14 @@ def get_mixture_embeddings(
     """
 
     # initial values
-    mixture_embeddings = np.zeros(
-        (otu_table_df.shape[0], otu_embeddings_df.shape[1])
-    )
+    target_dim = embedding_size
+    if (
+        space == "hyperbolic"
+        and fmean_model == "hyperboloid"
+        and convert_back == False
+    ):
+        target_dim += 1
+    mixture_embeddings = np.zeros((otu_table_df.shape[0], target_dim))
     otu_embeddings = otu_embeddings_df.to_numpy()
     ids = otu_table_df.index
     ids = ids[:small] if small else ids
