@@ -145,7 +145,10 @@ def get_mixture_embeddings(
                 mix_emb = convert_geometry_after(
                     fmean_model, data_model, mix_emb
                 )
-            pct_conv = fmean.converged
+            if return_percent_converged:
+                pct_conv = fmean.converged
+            else:
+                pct_conv = None
         else:  # euclidean space
             mix_emb = np.average(otu_embeddings, weights=weights, axis=0)
             pct_conv = None
@@ -159,7 +162,7 @@ def get_mixture_embeddings(
         for i, weights in tqdm(enumerate(Xvals)):
             mix_emb, pct_conv = _process_weights(weights)
             mixture_embeddings[i] = mix_emb
-            if pct_conv is not None:
+            if return_percent_converged and pct_conv is not None:
                 percent_converged.append(pct_conv)
     else:
         results = Parallel(n_jobs=n_jobs)(
@@ -167,7 +170,7 @@ def get_mixture_embeddings(
         )
         for i, (mix_emb, pct_conv) in enumerate(results):
             mixture_embeddings[i] = mix_emb
-            if pct_conv is not None:
+            if return_percent_converged and pct_conv is not None:
                 percent_converged.append(pct_conv)
 
     # format mixture_embeddings
