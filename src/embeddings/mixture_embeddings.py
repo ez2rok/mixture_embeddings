@@ -98,6 +98,7 @@ def get_mixture_embeddings(
     return_percent_converged=True,
     convert_back=True,
     n_jobs=1,
+    disable_tqdm=False,
 ):
     """
     Compute the mixture embeddings in a parallelized way.
@@ -117,11 +118,11 @@ def get_mixture_embeddings(
         and convert_back == False
     ):
         target_dim += 1
-    mixture_embeddings = np.zeros((otu_table_df.shape[0], target_dim))
-    otu_embeddings = otu_embeddings_df.to_numpy()
     ids = otu_table_df.index
     ids = ids[:small] if small else ids
-    otu_table = otu_table_df.to_numpy()
+    Xvals = otu_table_df.to_numpy()[:small] if small else otu_table_df.to_numpy()
+    mixture_embeddings = np.zeros((Xvals.shape[0], target_dim))
+    otu_embeddings = otu_embeddings_df.to_numpy()
     percent_converged = []
 
     # convert the data to the correct geometry to work with the frechet mean algorithm
@@ -158,7 +159,6 @@ def get_mixture_embeddings(
 
     # loop over all samples in otu_table and weight the frechet mean by the otu
     # count of these samples
-    Xvals = otu_table.iloc[:small] if small else otu_table
     if n_jobs == 1:
         for i, weights in tqdm(enumerate(Xvals)):
             mix_emb, pct_conv = _process_weights(weights)
@@ -167,7 +167,7 @@ def get_mixture_embeddings(
                 percent_converged.append(pct_conv)
     else:
         results = Parallel(n_jobs=n_jobs)(
-            delayed(_process_weights)(w) for w in tqdm(Xvals, total=len(Xvals))
+            delayed(_process_weights)(w) for w in tqdm(Xvals, total=len(Xvals), disable=disable_tqdm)
         )
         for i, (mix_emb, pct_conv) in enumerate(results):
             mixture_embeddings[i] = mix_emb
