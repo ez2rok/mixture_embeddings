@@ -3,6 +3,8 @@ import scipy.spatial.distance
 import torch
 import torch.nn.functional as F
 
+from scipy.spatial.distance import cdist
+
 from src.util.distance_functions.distance_functions import hyperbolic_distance
 
 
@@ -10,6 +12,9 @@ def euclidean_matrix(enc_reference, enc_query, scaling=None):
     distances = torch.cdist(enc_reference, enc_query)
     return distances
 
+def euclidean_matrix_numpy(enc_reference, enc_query, scaling=None):
+    distances = cdist(enc_reference, enc_query)
+    return distances
 
 def square_matrix(enc_reference, enc_query, scaling=None):
     d = euclidean_matrix(enc_reference, enc_query)
