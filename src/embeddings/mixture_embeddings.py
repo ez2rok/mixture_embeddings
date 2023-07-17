@@ -101,7 +101,9 @@ def get_mixture_embeddings(
     disable_tqdm=False,
 ):
     """
-    Compute the mixture embeddings in a parallelized way.
+    Compute the mixture embeddings in a parallelized way. Assume that the
+    otu_embeddings_df is already in the poincare model of geometry and that we
+    want to output the mixture embeddings in the poincare model of geometry.
     
     fmean_model: the model of hyperbolic geometry which the frechet mean
     algorithm is in
@@ -153,7 +155,7 @@ def get_mixture_embeddings(
                 pct_conv = None
         else:  # euclidean space
             mix_emb = np.average(otu_embeddings, weights=weights, axis=0)
-            pct_conv = None
+            pct_conv = 1 # euclidean always converges
 
         return mix_emb, pct_conv
 
