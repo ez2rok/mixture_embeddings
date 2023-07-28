@@ -1,18 +1,26 @@
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.decomposition import PCA
+
 seeds = [42]
 
-clfs = ['rf', 'lr']
-clf_params = {
+clf_names = ['rf', 'lr']
+clf_params_list = {
     'rf': {
         'n_estimators': [100, 300, 500],
-        'n_jobs': -1,
+        'n_jobs': [-1],
     },
     'lr': {
         'C': [1.0, 0.5, 0.1],
     }
 }
+clf_paths = {
+    'rf': RandomForestClassifier,
+    'lr': LogisticRegression
+}
 
-preprocessors = ['none', 'pca', 'horopca', 'tpca']
-preprocesser_params = {
+preprocessor_names = ['none', 'pca', 'horopca', 'tpca']
+preprocesser_params_list = {
     'none': {},
     'pca': {
         'random_state': 42,
@@ -23,6 +31,10 @@ preprocesser_params = {
     'tpca': {
         'random_state': 42,
     },
+}
+preprocessor_paths = {
+    'none': None,
+    'pca': PCA,
 }
 
 embedding_geometries = ['hyp', 'poi', 'euc', 'pca']

@@ -1,0 +1,289 @@
+	seed	clf	clf_params	preprocesser	preprocesser_params	embedding_geometry	embedding_dim	train_accuracy_1	train_accuracy_2	train_accuracy_3	train_accuracy_4	train_accuracy_5	test_accuracy_1	test_accuracy_2	test_accuracy_3	test_accuracy_4	test_accuracy_5	train_f1_1	train_f1_2	train_f1_3	train_f1_4	train_f1_5	test_f1_1	test_f1_2	test_f1_3	test_f1_4	test_f1_5	train_roc_auc_1	train_roc_auc_2	train_roc_auc_3	train_roc_auc_4	train_roc_auc_5	test_roc_auc_1	test_roc_auc_2	test_roc_auc_3	test_roc_auc_4	test_roc_auc_5	time (sec)	finished_run	error
+0	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	hyp	2																																False	False
+1	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	hyp	2																																False	False
+2	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	hyp	2																																False	False
+3	42	lr	{'C': 1.0}	none	{}	hyp	2																																False	False
+4	42	lr	{'C': 0.5}	none	{}	hyp	2																																False	False
+5	42	lr	{'C': 0.1}	none	{}	hyp	2																																False	False
+6	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	2																																False	False
+7	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	2																																False	False
+8	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	2																																False	False
+9	42	lr	{'C': 1.0}	pca	{'random_state': 42}	hyp	2																																False	False
+10	42	lr	{'C': 0.5}	pca	{'random_state': 42}	hyp	2																																False	False
+11	42	lr	{'C': 0.1}	pca	{'random_state': 42}	hyp	2																																False	False
+12	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	2																																False	False
+13	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	2																																False	False
+14	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	2																																False	False
+15	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	hyp	2																																False	False
+16	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	hyp	2																																False	False
+17	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	hyp	2																																False	False
+18	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	2																																False	False
+19	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	2																																False	False
+20	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	2																																False	False
+21	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	hyp	2																																False	False
+22	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	hyp	2																																False	False
+23	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	hyp	2																																False	False
+24	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	hyp	16																																False	False
+25	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	hyp	16																																False	False
+26	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	hyp	16																																False	False
+27	42	lr	{'C': 1.0}	none	{}	hyp	16																																False	False
+28	42	lr	{'C': 0.5}	none	{}	hyp	16																																False	False
+29	42	lr	{'C': 0.1}	none	{}	hyp	16																																False	False
+30	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	16																																False	False
+31	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	16																																False	False
+32	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	16																																False	False
+33	42	lr	{'C': 1.0}	pca	{'random_state': 42}	hyp	16																																False	False
+34	42	lr	{'C': 0.5}	pca	{'random_state': 42}	hyp	16																																False	False
+35	42	lr	{'C': 0.1}	pca	{'random_state': 42}	hyp	16																																False	False
+36	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	16																																False	False
+37	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	16																																False	False
+38	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	16																																False	False
+39	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	hyp	16																																False	False
+40	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	hyp	16																																False	False
+41	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	hyp	16																																False	False
+42	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	16																																False	False
+43	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	16																																False	False
+44	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	16																																False	False
+45	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	hyp	16																																False	False
+46	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	hyp	16																																False	False
+47	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	hyp	16																																False	False
+48	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	hyp	128																																False	False
+49	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	hyp	128																																False	False
+50	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	hyp	128																																False	False
+51	42	lr	{'C': 1.0}	none	{}	hyp	128																																False	False
+52	42	lr	{'C': 0.5}	none	{}	hyp	128																																False	False
+53	42	lr	{'C': 0.1}	none	{}	hyp	128																																False	False
+54	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	128																																False	False
+55	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	128																																False	False
+56	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	hyp	128																																False	False
+57	42	lr	{'C': 1.0}	pca	{'random_state': 42}	hyp	128																																False	False
+58	42	lr	{'C': 0.5}	pca	{'random_state': 42}	hyp	128																																False	False
+59	42	lr	{'C': 0.1}	pca	{'random_state': 42}	hyp	128																																False	False
+60	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	128																																False	False
+61	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	128																																False	False
+62	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	hyp	128																																False	False
+63	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	hyp	128																																False	False
+64	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	hyp	128																																False	False
+65	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	hyp	128																																False	False
+66	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	128																																False	False
+67	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	128																																False	False
+68	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	hyp	128																																False	False
+69	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	hyp	128																																False	False
+70	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	hyp	128																																False	False
+71	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	hyp	128																																False	False
+72	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	poi	2																																False	False
+73	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	poi	2																																False	False
+74	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	poi	2																																False	False
+75	42	lr	{'C': 1.0}	none	{}	poi	2																																False	False
+76	42	lr	{'C': 0.5}	none	{}	poi	2																																False	False
+77	42	lr	{'C': 0.1}	none	{}	poi	2																																False	False
+78	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	poi	2																																False	False
+79	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	poi	2																																False	False
+80	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	poi	2																																False	False
+81	42	lr	{'C': 1.0}	pca	{'random_state': 42}	poi	2																																False	False
+82	42	lr	{'C': 0.5}	pca	{'random_state': 42}	poi	2																																False	False
+83	42	lr	{'C': 0.1}	pca	{'random_state': 42}	poi	2																																False	False
+84	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	2																																False	False
+85	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	2																																False	False
+86	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	2																																False	False
+87	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	poi	2																																False	False
+88	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	poi	2																																False	False
+89	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	poi	2																																False	False
+90	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	2																																False	False
+91	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	2																																False	False
+92	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	2																																False	False
+93	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	poi	2																																False	False
+94	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	poi	2																																False	False
+95	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	poi	2																																False	False
+96	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	poi	16																																False	False
+97	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	poi	16																																False	False
+98	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	poi	16																																False	False
+99	42	lr	{'C': 1.0}	none	{}	poi	16																																False	False
+100	42	lr	{'C': 0.5}	none	{}	poi	16																																False	False
+101	42	lr	{'C': 0.1}	none	{}	poi	16																																False	False
+102	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	poi	16																																False	False
+103	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	poi	16																																False	False
+104	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	poi	16																																False	False
+105	42	lr	{'C': 1.0}	pca	{'random_state': 42}	poi	16																																False	False
+106	42	lr	{'C': 0.5}	pca	{'random_state': 42}	poi	16																																False	False
+107	42	lr	{'C': 0.1}	pca	{'random_state': 42}	poi	16																																False	False
+108	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	16																																False	False
+109	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	16																																False	False
+110	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	16																																False	False
+111	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	poi	16																																False	False
+112	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	poi	16																																False	False
+113	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	poi	16																																False	False
+114	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	16																																False	False
+115	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	16																																False	False
+116	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	16																																False	False
+117	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	poi	16																																False	False
+118	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	poi	16																																False	False
+119	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	poi	16																																False	False
+120	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	poi	128																																False	False
+121	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	poi	128																																False	False
+122	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	poi	128																																False	False
+123	42	lr	{'C': 1.0}	none	{}	poi	128																																False	False
+124	42	lr	{'C': 0.5}	none	{}	poi	128																																False	False
+125	42	lr	{'C': 0.1}	none	{}	poi	128																																False	False
+126	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	poi	128																																False	False
+127	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	poi	128																																False	False
+128	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	poi	128																																False	False
+129	42	lr	{'C': 1.0}	pca	{'random_state': 42}	poi	128																																False	False
+130	42	lr	{'C': 0.5}	pca	{'random_state': 42}	poi	128																																False	False
+131	42	lr	{'C': 0.1}	pca	{'random_state': 42}	poi	128																																False	False
+132	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	128																																False	False
+133	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	128																																False	False
+134	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	poi	128																																False	False
+135	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	poi	128																																False	False
+136	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	poi	128																																False	False
+137	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	poi	128																																False	False
+138	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	128																																False	False
+139	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	128																																False	False
+140	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	poi	128																																False	False
+141	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	poi	128																																False	False
+142	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	poi	128																																False	False
+143	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	poi	128																																False	False
+144	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	euc	2																																False	False
+145	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	euc	2																																False	False
+146	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	euc	2																																False	False
+147	42	lr	{'C': 1.0}	none	{}	euc	2																																False	False
+148	42	lr	{'C': 0.5}	none	{}	euc	2																																False	False
+149	42	lr	{'C': 0.1}	none	{}	euc	2																																False	False
+150	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	euc	2																																False	False
+151	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	euc	2																																False	False
+152	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	euc	2																																False	False
+153	42	lr	{'C': 1.0}	pca	{'random_state': 42}	euc	2																																False	False
+154	42	lr	{'C': 0.5}	pca	{'random_state': 42}	euc	2																																False	False
+155	42	lr	{'C': 0.1}	pca	{'random_state': 42}	euc	2																																False	False
+156	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	2																																False	False
+157	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	2																																False	False
+158	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	2																																False	False
+159	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	euc	2																																False	False
+160	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	euc	2																																False	False
+161	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	euc	2																																False	False
+162	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	2																																False	False
+163	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	2																																False	False
+164	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	2																																False	False
+165	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	euc	2																																False	False
+166	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	euc	2																																False	False
+167	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	euc	2																																False	False
+168	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	euc	16																																False	False
+169	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	euc	16																																False	False
+170	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	euc	16																																False	False
+171	42	lr	{'C': 1.0}	none	{}	euc	16																																False	False
+172	42	lr	{'C': 0.5}	none	{}	euc	16																																False	False
+173	42	lr	{'C': 0.1}	none	{}	euc	16																																False	False
+174	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	euc	16																																False	False
+175	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	euc	16																																False	False
+176	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	euc	16																																False	False
+177	42	lr	{'C': 1.0}	pca	{'random_state': 42}	euc	16																																False	False
+178	42	lr	{'C': 0.5}	pca	{'random_state': 42}	euc	16																																False	False
+179	42	lr	{'C': 0.1}	pca	{'random_state': 42}	euc	16																																False	False
+180	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	16																																False	False
+181	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	16																																False	False
+182	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	16																																False	False
+183	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	euc	16																																False	False
+184	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	euc	16																																False	False
+185	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	euc	16																																False	False
+186	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	16																																False	False
+187	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	16																																False	False
+188	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	16																																False	False
+189	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	euc	16																																False	False
+190	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	euc	16																																False	False
+191	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	euc	16																																False	False
+192	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	euc	128																																False	False
+193	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	euc	128																																False	False
+194	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	euc	128																																False	False
+195	42	lr	{'C': 1.0}	none	{}	euc	128																																False	False
+196	42	lr	{'C': 0.5}	none	{}	euc	128																																False	False
+197	42	lr	{'C': 0.1}	none	{}	euc	128																																False	False
+198	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	euc	128																																False	False
+199	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	euc	128																																False	False
+200	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	euc	128																																False	False
+201	42	lr	{'C': 1.0}	pca	{'random_state': 42}	euc	128																																False	False
+202	42	lr	{'C': 0.5}	pca	{'random_state': 42}	euc	128																																False	False
+203	42	lr	{'C': 0.1}	pca	{'random_state': 42}	euc	128																																False	False
+204	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	128																																False	False
+205	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	128																																False	False
+206	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	euc	128																																False	False
+207	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	euc	128																																False	False
+208	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	euc	128																																False	False
+209	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	euc	128																																False	False
+210	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	128																																False	False
+211	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	128																																False	False
+212	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	euc	128																																False	False
+213	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	euc	128																																False	False
+214	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	euc	128																																False	False
+215	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	euc	128																																False	False
+216	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	pca	2																																False	False
+217	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	pca	2																																False	False
+218	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	pca	2																																False	False
+219	42	lr	{'C': 1.0}	none	{}	pca	2																																False	False
+220	42	lr	{'C': 0.5}	none	{}	pca	2																																False	False
+221	42	lr	{'C': 0.1}	none	{}	pca	2																																False	False
+222	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	pca	2																																False	False
+223	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	pca	2																																False	False
+224	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	pca	2																																False	False
+225	42	lr	{'C': 1.0}	pca	{'random_state': 42}	pca	2																																False	False
+226	42	lr	{'C': 0.5}	pca	{'random_state': 42}	pca	2																																False	False
+227	42	lr	{'C': 0.1}	pca	{'random_state': 42}	pca	2																																False	False
+228	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	2																																False	False
+229	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	2																																False	False
+230	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	2																																False	False
+231	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	pca	2																																False	False
+232	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	pca	2																																False	False
+233	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	pca	2																																False	False
+234	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	2																																False	False
+235	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	2																																False	False
+236	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	2																																False	False
+237	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	pca	2																																False	False
+238	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	pca	2																																False	False
+239	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	pca	2																																False	False
+240	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	pca	16																																False	False
+241	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	pca	16																																False	False
+242	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	pca	16																																False	False
+243	42	lr	{'C': 1.0}	none	{}	pca	16																																False	False
+244	42	lr	{'C': 0.5}	none	{}	pca	16																																False	False
+245	42	lr	{'C': 0.1}	none	{}	pca	16																																False	False
+246	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	pca	16																																False	False
+247	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	pca	16																																False	False
+248	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	pca	16																																False	False
+249	42	lr	{'C': 1.0}	pca	{'random_state': 42}	pca	16																																False	False
+250	42	lr	{'C': 0.5}	pca	{'random_state': 42}	pca	16																																False	False
+251	42	lr	{'C': 0.1}	pca	{'random_state': 42}	pca	16																																False	False
+252	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	16																																False	False
+253	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	16																																False	False
+254	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	16																																False	False
+255	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	pca	16																																False	False
+256	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	pca	16																																False	False
+257	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	pca	16																																False	False
+258	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	16																																False	False
+259	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	16																																False	False
+260	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	16																																False	False
+261	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	pca	16																																False	False
+262	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	pca	16																																False	False
+263	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	pca	16																																False	False
+264	42	rf	{'n_estimators': 100, 'n_jobs': -1}	none	{}	pca	128																																False	False
+265	42	rf	{'n_estimators': 300, 'n_jobs': -1}	none	{}	pca	128																																False	False
+266	42	rf	{'n_estimators': 500, 'n_jobs': -1}	none	{}	pca	128																																False	False
+267	42	lr	{'C': 1.0}	none	{}	pca	128																																False	False
+268	42	lr	{'C': 0.5}	none	{}	pca	128																																False	False
+269	42	lr	{'C': 0.1}	none	{}	pca	128																																False	False
+270	42	rf	{'n_estimators': 100, 'n_jobs': -1}	pca	{'random_state': 42}	pca	128																																False	False
+271	42	rf	{'n_estimators': 300, 'n_jobs': -1}	pca	{'random_state': 42}	pca	128																																False	False
+272	42	rf	{'n_estimators': 500, 'n_jobs': -1}	pca	{'random_state': 42}	pca	128																																False	False
+273	42	lr	{'C': 1.0}	pca	{'random_state': 42}	pca	128																																False	False
+274	42	lr	{'C': 0.5}	pca	{'random_state': 42}	pca	128																																False	False
+275	42	lr	{'C': 0.1}	pca	{'random_state': 42}	pca	128																																False	False
+276	42	rf	{'n_estimators': 100, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	128																																False	False
+277	42	rf	{'n_estimators': 300, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	128																																False	False
+278	42	rf	{'n_estimators': 500, 'n_jobs': -1}	horopca	{'random_state': 42}	pca	128																																False	False
+279	42	lr	{'C': 1.0}	horopca	{'random_state': 42}	pca	128																																False	False
+280	42	lr	{'C': 0.5}	horopca	{'random_state': 42}	pca	128																																False	False
+281	42	lr	{'C': 0.1}	horopca	{'random_state': 42}	pca	128																																False	False
+282	42	rf	{'n_estimators': 100, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	128																																False	False
+283	42	rf	{'n_estimators': 300, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	128																																False	False
+284	42	rf	{'n_estimators': 500, 'n_jobs': -1}	tpca	{'random_state': 42}	pca	128																																False	False
+285	42	lr	{'C': 1.0}	tpca	{'random_state': 42}	pca	128																																False	False
+286	42	lr	{'C': 0.5}	tpca	{'random_state': 42}	pca	128																																False	False
+287	42	lr	{'C': 0.1}	tpca	{'random_state': 42}	pca	128																																False	False
