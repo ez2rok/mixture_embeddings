@@ -115,7 +115,7 @@ def initialize_benchmark(
     
     # save benchmark as tsv
     df = pd.DataFrame(benchmark)
-    df.to_csv(benchmark_path, sep='\t')
+    df.to_csv(benchmark_path, sep='\t', index=True)
     return df
 
 if __name__ == '__main__':
