@@ -152,7 +152,7 @@ def evaluate_task(X, y, configs, benchmark_path):
                 
 if __name__ == '__main__':
     
-    benchmark_path = '../../benchmark.tsv'
+    benchmark_path = 'benchmark.tsv'
     df = pd.read_csv(benchmark_path, sep='\t', index_col=0)
     configs = list(df.T.to_dict().values())
     
